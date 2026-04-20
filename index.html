@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<title>ApartBook Transport</title>
+<meta name="theme-color" content="#0ea5e9"/>
+<link rel="manifest" href="manifest.json"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="AB Transport"/>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#060910;color:#e2e8f0;font-family:system-ui,-apple-system,sans-serif;min-height:100vh;overflow-x:hidden}
+input,select,textarea,button{font-family:inherit;font-size:inherit}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
+input[type=date]::-webkit-calendar-picker-indicator,
+input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.6)}
+
+/* ── THEME COLORS ── */
+/* Primary: Sky blue #0ea5e9 */
+/* Surface: #0c1220 #111827 #1a2535 */
+/* Border: #1e3a5f #2a4a6b */
+
+.hdr{background:#0c1220;border-bottom:1px solid #1e3a5f;position:sticky;top:0;z-index:100}
+.hdr-top{display:flex;align-items:center;padding:0 10px;height:50px;gap:8px;border-bottom:1px solid #1e3a5f}
+.logo-txt{font-size:14px;font-weight:800;background:linear-gradient(135deg,#7dd3fc,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.hdr-tabs{display:flex;align-items:center;overflow-x:auto;padding:0 8px;height:40px;gap:2px;scrollbar-width:none}
+.hdr-tabs::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:8px 11px;font-size:11px;cursor:pointer;color:#64748b;white-space:nowrap;flex-shrink:0;height:100%;transition:color .2s}
+.tab-btn.active{border-bottom-color:#0ea5e9;color:#0ea5e9;font-weight:500}
+.tab-btn:hover{color:#e2e8f0}
+
+.main{padding:14px 12px;max-width:980px;margin:0 auto}
+.pg-title{font-size:17px;font-weight:600;margin-bottom:14px}
+.card{background:#0c1220;border:1px solid #1e3a5f;border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px}
+
+/* ── STATS GRID ── */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.stat{background:#0c1220;border:1px solid #1e3a5f;border-radius:12px;padding:12px 14px}
+.stat-l{font-size:10px;color:#64748b;margin-bottom:3px}
+.stat-v{font-size:20px;font-weight:700}
+.stat.wide{grid-column:1/-1}
+@media(min-width:500px){.stats{grid-template-columns:repeat(3,1fr)}}
+
+/* ── FORM ── */
+label{font-size:12px;color:#64748b;display:block;margin-bottom:4px}
+input,select,textarea{width:100%;background:#111827;border:1px solid #2a4a6b;border-radius:8px;color:#e2e8f0;padding:8px 12px;font-size:13px;margin-bottom:10px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#0ea5e9}
+textarea{resize:vertical;min-height:60px}
+.frow{display:flex;gap:10px;flex-wrap:wrap}
+.fcol{flex:1;min-width:140px}
+
+/* ── BUTTONS ── */
+.btn{background:none;border:1px solid #2a4a6b;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;color:#e2e8f0}
+.btn:hover{border-color:#0ea5e9;color:#0ea5e9}
+.btnp{background:#0ea5e9;border:none;border-radius:8px;padding:9px 20px;cursor:pointer;font-size:13px;color:#fff;font-weight:500}
+.btnp:hover{background:#0284c7}
+.btnd{background:none;border:1px solid rgba(239,68,68,.4);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;color:#ef4444}
+.btn-green{background:#0d2d1a;border:1.5px solid rgba(34,197,94,.5);border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px;color:#22c55e;font-weight:500}
+.btn-red{background:#2d0d0d;border:1.5px solid rgba(239,68,68,.5);border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px;color:#ef4444;font-weight:500}
+
+/* ── TABLE ── */
+.tblw{overflow-x:auto;border:1px solid #1e3a5f;border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:9px 11px;border-bottom:1px solid #1e3a5f;color:#64748b;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;background:#111827}
+td{padding:10px 11px;border-bottom:1px solid #1e3a5f;vertical-align:middle}
+tr:last-child td{border:none}
+tbody tr:hover td{background:#111827;cursor:pointer}
+
+/* ── MAP ── */
+#live-map{height:340px;border-radius:10px;border:1px solid #1e3a5f;z-index:1}
+.map-controls{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:#64748b}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
+
+/* ── BADGES ── */
+.badge{border-radius:6px;padding:3px 9px;font-size:11px;font-weight:500;display:inline-block;white-space:nowrap}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:300;padding:14px}
+.modal-box{background:#0c1220;border:1px solid #1e3a5f;border-radius:14px;padding:22px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto}
+.dr{display:flex;border-bottom:1px solid #1e3a5f;padding:8px 0;font-size:13px}
+.dl{color:#64748b;width:120px;flex-shrink:0}
+
+/* ── MISC ── */
+.empty{color:#64748b;font-size:13px;padding:20px;text-align:center}
+.err{font-size:12px;color:#ef4444;margin-bottom:8px}
+.ok{font-size:12px;color:#22c55e;margin-bottom:8px}
+.info-box{background:#0d1f36;border:1px solid rgba(14,165,233,.3);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px}
+.search-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.search-row input,.search-row select{flex:1;min-width:140px;margin-bottom:0}
+.bar-bg{height:7px;background:#111827;border-radius:4px;overflow:hidden;margin-top:4px}
+.bar-fill{height:100%;border-radius:4px}
+.ride-item{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid #1e3a5f;cursor:pointer}
+.ride-item:last-child{border:none}
+.pulse{animation:pulse-anim 1.5s infinite}
+@keyframes pulse-anim{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── LOGIN ── */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#060910;position:relative;overflow:hidden}
+.login-glow{position:fixed;top:-20%;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.08) 0%,transparent 70%);pointer-events:none}
+.login-card{background:#0c1220;border:1px solid #1e3a5f;border-radius:16px;padding:28px 26px;box-shadow:0 24px 64px rgba(14,165,233,.12);width:100%;max-width:400px}
+.pw-wrap{position:relative;margin-bottom:6px}
+.pw-wrap input{margin-bottom:0;padding-right:46px}
+.pw-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:12px;padding:0}
+.btn-login{width:100%;padding:12px;font-size:14px;font-weight:600;border:none;border-radius:10px;background:linear-gradient(135deg,#0ea5e9,#0369a1);color:#fff;cursor:pointer;margin-top:16px;box-shadow:0 4px 24px rgba(14,165,233,.35)}
+.wa-float{position:fixed;bottom:18px;right:18px;width:48px;height:48px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:200;box-shadow:0 4px 18px rgba(37,211,102,.5);text-decoration:none}
+.splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:14px;background:#060910}
+.splash p{color:#64748b;font-size:14px}
+.driver-track-bar{background:#0d1f36;border:1px solid rgba(14,165,233,.4);border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.settings-section{margin-bottom:18px}
+.settings-section h4{font-size:13px;font-weight:600;color:#0ea5e9;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1e3a5f}
+.toggle-wrap{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e3a5f;font-size:13px}
+.toggle{width:40px;height:22px;border-radius:11px;border:none;cursor:pointer;position:relative;transition:.3s;flex-shrink:0}
+.toggle.on{background:#0ea5e9}
+.toggle.off{background:#1e3a5f}
+</style>
+</head>
+<body>
+<div id="app"><div class="splash"><p>Starting ApartBook Transport…</p></div></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<!-- Leaflet JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════
+//  FIREBASE CONFIG — PASTE YOUR VALUES HERE
+// ═══════════════════════════════════════════
+firebase.initializeApp({
+  apiKey:            "AIzaSyA-fAkD-8-EdKLG1fYQfr1cM05hP77oSoA",
+  authDomain:        "apartbook-transport-demo.firebaseapp.com",
+  projectId:         "apartbook-transport-demo",
+  storageBucket:     "apartbook-transport-demo.firebasestorage.app",
+  messagingSenderId: "414089337370",
+  appId:             "1:414089337370:web:8bd0f06bf9a2bd82404fa3",
+  databaseURL:       "https://apartbook-transport-demo-default-rtdb.europe-west1.firebasedatabase.app"
+});
+const auth = firebase.auth();
+const db   = firebase.firestore();
+const rtdb = firebase.database();
+const TS   = firebase.firestore.FieldValue.serverTimestamp;
+
+// ═══════════════════════════════════════════
+//  DEFAULT PRICING (Admin can change these)
+// ═══════════════════════════════════════════
+const DEFAULT_PRICING = {
+  baseFare:        500,   // ₦ flat fee per ride
+  perKm:           120,   // ₦ per kilometre
+  perMinWaiting:   25,    // ₦ per minute waiting/traffic
+  minFare:         800,   // ₦ minimum fare
+  nightSurcharge:  1.5,   // multiplier 10pm–5am
+  airportFee:      500,   // ₦ fixed airport surcharge
+  bookingFee:      100,   // ₦ platform booking fee
+  currency:        "₦",
+};
+
+// ═══════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════
+const MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const RIDE_STATUSES=["Pending","Active","Completed","Cancelled"];
+const DRIVER_STATUSES=["Online","Offline","On Ride"];
+const RS_STYLE={
+  Pending:   {bg:"#2d1f0d",c:"#f59e0b"},
+  Active:    {bg:"#0d2d1a",c:"#22c55e"},
+  Completed: {bg:"#0d1f36",c:"#0ea5e9"},
+  Cancelled: {bg:"#2d0d0d",c:"#ef4444"},
+};
+const DS_STYLE={
+  Online:  {bg:"#0d2d1a",c:"#22c55e"},
+  Offline: {bg:"#1a1a1a",c:"#64748b"},
+  "On Ride":{bg:"#0d1f36",c:"#0ea5e9"},
+};
+
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+const fmt   = n  => "₦"+Number(n).toLocaleString();
+const ini   = n  => (n||"?").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase();
+const tod   = () => new Date().toISOString().split("T")[0];
+const esc   = s  => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmtWA = p  => {const d=String(p||"").replace(/\D/g,"");return d.startsWith("0")?"234"+d.slice(1):d.startsWith("234")?d:d;};
+const fmtTime=t=>{if(!t)return"—";const[h,m]=t.split(":");const hh=Number(h);return`${hh%12||12}:${m} ${hh<12?"AM":"PM"}`;};
+const nowTime=()=>new Date().toTimeString().slice(0,5);
+const nowDate=()=>tod();
+
+// Haversine distance (km) — free, no API needed
+function distKm(lat1,lon1,lat2,lon2){
+  const R=6371,dL=(lat2-lat1)*Math.PI/180,dl=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dl/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function calcFare(km,waitMins,pricing,isNight=false,isAirport=false){
+  let fare=pricing.baseFare+(km*pricing.perKm)+(waitMins*pricing.perMinWaiting)+pricing.bookingFee;
+  if(isAirport)fare+=pricing.airportFee;
+  if(isNight)fare*=pricing.nightSurcharge;
+  return Math.max(fare,pricing.minFare);
+}
+
+function isNightTime(){
+  const h=new Date().getHours();
+  return h>=22||h<5;
+}
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+const S={
+  user:null, profile:null, tab:"Dashboard",
+  rides:[], drivers:[], auditLog:[],
+  pricing:DEFAULT_PRICING,
+  search:"", filterStatus:"All",
+  sel:null, editMode:false, editForm:null,
+  delId:null,
+  driverForm:{name:"",phone:"",vehicle:"",plate:"",color:""},
+  rideForm:{passenger:"",phone:"",pickup:"",dropoff:"",driverId:"",isAirport:false,notes:""},
+  reportMonth:new Date().getMonth(), reportYear:new Date().getFullYear(),
+  loginErr:"", loginBusy:false, showPw:false,
+  mapReady:false, trackingRideId:null,
+  activeDriverLocations:{},
+  gpsWatcher:null, isTracking:false,
+  settingsForm:null,
+};
+
+const isAdmin=()=>S.profile?.role==="admin";
+const isMgr=()=>["admin","manager"].includes(S.profile?.role);
+
+// ═══════════════════════════════════════════
+//  LOGO SVG
+// ═══════════════════════════════════════════
+const LOGO=(sz=32)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 36 36" fill="none">
+  <rect width="36" height="36" rx="9" fill="#0d1f36"/>
+  <rect x="1" y="1" width="34" height="34" rx="8.5" stroke="#0ea5e9" stroke-opacity=".6"/>
+  <rect x="6" y="20" width="24" height="10" rx="2" fill="#0ea5e9" opacity=".2"/>
+  <rect x="6" y="20" width="24" height="10" rx="2" stroke="#0ea5e9"/>
+  <path d="M8 20 L10 14 Q11 12 13 12 L23 12 Q25 12 26 14 L28 20" stroke="#0ea5e9" stroke-width="1.2" fill="none"/>
+  <circle cx="11" cy="30" r="2.5" fill="#0ea5e9"/>
+  <circle cx="25" cy="30" r="2.5" fill="#0ea5e9"/>
+  <rect x="14" y="14" width="8" height="5" rx="1" fill="#7dd3fc" opacity=".5"/>
+  <circle cx="26" cy="16" r="2" fill="#22c55e"/>
+  <circle cx="26" cy="16" r="1" fill="#fff" class="pulse"/>
+</svg>`;
+
+// ═══════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════
+const rideBadge=s=>{const c=RS_STYLE[s]||{bg:"#1a1a1a",c:"#64748b"};return`<span class="badge" style="background:${c.bg};color:${c.c}">${esc(s)}</span>`;};
+const driverBadge=s=>{const c=DS_STYLE[s]||DS_STYLE.Offline;return`<span class="badge" style="background:${c.bg};color:${c.c}">${esc(s)}</span>`;};
+const av=(n,sz=30,bg="#0d1f36",brd="#0ea5e9",col="#7dd3fc")=>`<div class="av" style="width:${sz}px;height:${sz}px;font-size:${sz*.34}px;background:${bg};border:1.5px solid ${brd};color:${col}">${ini(n)}</div>`;
+const DR=(label,value)=>`<div class="dr"><span class="dl">${label}</span><div style="flex:1">${value}</div></div>`;
+
+// ═══════════════════════════════════════════
+//  FIREBASE AUTH
+// ═══════════════════════════════════════════
+window.doLogin=async function(){
+  const email=document.getElementById("li-email")?.value?.trim();
+  const pass=document.getElementById("li-pass")?.value;
+  if(!email||!pass){S.loginErr="Please enter email and password.";render();return;}
+  S.loginBusy=true;S.loginErr="";render();
+  try{
+    const cred=await auth.signInWithEmailAndPassword(email,pass);
+    await db.collection("audit_log").add({userId:cred.user.uid,email:cred.user.email,action:"LOGIN",timestamp:TS(),device:navigator.userAgent.slice(0,100)});
+  }catch(e){
+    S.loginErr=e.code?.includes("invalid-credential")||e.code?.includes("wrong-password")?"Invalid email or password.":"Error: "+e.message;
+    S.loginBusy=false;render();
+  }
+};
+
+window.doLogout=async function(){
+  try{await db.collection("audit_log").add({userId:S.user.uid,email:S.user.email,action:"LOGOUT",timestamp:TS(),device:navigator.userAgent.slice(0,100)});}catch(_){}
+  stopTracking();
+  auth.signOut();
+};
+
+// ═══════════════════════════════════════════
+//  DATA LOADING
+// ═══════════════════════════════════════════
+let ridesUnsub=null,auditUnsub=null,staffUnsub=null;
+
+function loadProfile(){
+  const ref=db.collection("users").doc(S.user.uid);
+  ref.onSnapshot(async snap=>{
+    if(snap.exists){S.profile=snap.data();}
+    else{
+      const all=await db.collection("users").limit(1).get();
+      const data={email:S.user.email,name:S.user.email.split("@")[0],role:all.empty?"admin":"staff",createdAt:TS()};
+      await ref.set(data);S.profile=data;
+    }
+    render();
+  });
+}
+
+function loadPricing(){
+  db.collection("settings").doc("pricing").onSnapshot(snap=>{
+    if(snap.exists)S.pricing={...DEFAULT_PRICING,...snap.data()};
+    else S.pricing={...DEFAULT_PRICING};
+    render();
+  });
+}
+
+function loadDrivers(){
+  db.collection("drivers").orderBy("name","asc").onSnapshot(snap=>{
+    S.drivers=snap.docs.map(d=>({...d.data(),_id:d.id}));
+    render();
+  },()=>{
+    db.collection("drivers").get().then(snap=>{S.drivers=snap.docs.map(d=>({...d.data(),_id:d.id}));render();});
+  });
+}
+
+function loadRides(){
+  if(ridesUnsub){ridesUnsub();ridesUnsub=null;}
+  ridesUnsub=db.collection("rides").orderBy("created","desc").limit(200)
+    .onSnapshot(snap=>{
+      S.rides=snap.docs.map(d=>({...d.data(),_id:d.id}));render();
+    },()=>{
+      db.collection("rides").get().then(snap=>{S.rides=snap.docs.map(d=>({...d.data(),_id:d.id})).sort((a,b)=>(b.created?.seconds||0)-(a.created?.seconds||0));render();});
+    });
+}
+
+// ═══════════════════════════════════════════
+//  GPS TRACKING
+// ═══════════════════════════════════════════
+function startTracking(rideId){
+  if(!navigator.geolocation){alert("GPS not available on this device.");return;}
+  S.trackingRideId=rideId;S.isTracking=true;
+  S.gpsWatcher=navigator.geolocation.watchPosition(async pos=>{
+    const{latitude:lat,longitude:lng}=pos.coords;
+    const speed=pos.coords.speed||0;
+    try{
+      await rtdb.ref(`drivers_live/${S.user.uid}`).set({lat,lng,speed,rideId,timestamp:Date.now(),driverName:S.profile?.name||S.user.email});
+    }catch(_){}
+    render();
+  },{enableHighAccuracy:true,maximumAge:3000,timeout:10000},{enableHighAccuracy:true});
+}
+
+function stopTracking(){
+  if(S.gpsWatcher!=null){navigator.geolocation.clearWatch(S.gpsWatcher);S.gpsWatcher=null;}
+  if(S.user)rtdb.ref(`drivers_live/${S.user.uid}`).remove().catch(()=>{});
+  S.isTracking=false;S.trackingRideId=null;
+}
+
+// ═══════════════════════════════════════════
+//  RIDE ACTIONS
+// ═══════════════════════════════════════════
+window.addRide=async function(){
+  const errEl=document.getElementById("r-err");
+  const f={
+    passenger: document.getElementById("r-passenger")?.value?.trim(),
+    phone:     document.getElementById("r-phone")?.value?.trim(),
+    pickup:    document.getElementById("r-pickup")?.value?.trim(),
+    dropoff:   document.getElementById("r-dropoff")?.value?.trim(),
+    driverId:  document.getElementById("r-driver")?.value,
+    isAirport: document.getElementById("r-airport")?.checked||false,
+    notes:     document.getElementById("r-notes")?.value?.trim(),
+    date:      document.getElementById("r-date")?.value||tod(),
+    time:      document.getElementById("r-time")?.value||nowTime(),
+  };
+  if(!f.passenger){if(errEl)errEl.textContent="Passenger name required.";return;}
+  if(!f.pickup){if(errEl)errEl.textContent="Pickup location required.";return;}
+  if(!f.dropoff){if(errEl)errEl.textContent="Dropoff location required.";return;}
+  if(!f.driverId){if(errEl)errEl.textContent="Please assign a driver.";return;}
+  const driver=S.drivers.find(d=>d._id===f.driverId);
+  const estimatedFare=calcFare(5,0,S.pricing,isNightTime(),f.isAirport);
+  try{
+    const ref=await db.collection("rides").add({...f,status:"Pending",fare:0,estimatedFare,distanceKm:0,durationMins:0,
+      driverName:driver?.name||"",driverPhone:driver?.phone||"",vehicle:driver?.vehicle||"",plate:driver?.plate||"",
+      createdBy:S.user.email,created:TS(),paymentStatus:"Unpaid"});
+    // update driver status
+    if(f.driverId)await db.collection("drivers").doc(f.driverId).update({status:"On Ride",currentRideId:ref.id});
+    // WhatsApp
+    const phone=fmtWA(f.phone||"");
+    const msg=encodeURIComponent(`Hello ${f.passenger}! 🚗\n\nYour ride is confirmed.\n\n📍 Pickup: ${f.pickup}\n📍 Dropoff: ${f.dropoff}\n🚙 Driver: ${driver?.name||"TBA"}\n🔢 Plate: ${driver?.plate||"TBA"}\n📞 Driver Phone: ${driver?.phone||"TBA"}\n⏰ Time: ${f.time}\n\nThank you for riding with us! 🙏`);
+    // clear form
+    ["r-passenger","r-phone","r-pickup","r-dropoff","r-notes"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+    const dEl=document.getElementById("r-driver");if(dEl)dEl.selectedIndex=0;
+    const aEl=document.getElementById("r-airport");if(aEl)aEl.checked=false;
+    if(errEl)errEl.textContent="";
+    document.getElementById("r-ok").textContent="✅ Ride booked!";
+    setTimeout(()=>{const o=document.getElementById("r-ok");if(o)o.textContent="";},3000);
+    if(phone.length>=10&&confirm("Send WhatsApp confirmation to passenger?"))window.open(`https://wa.me/${phone}?text=${msg}`,"_blank");
+  }catch(e){if(errEl)errEl.textContent="Error: "+e.message;}
+};
+
+window.startRide=async function(id){
+  try{
+    await db.collection("rides").doc(id).update({status:"Active",startedAt:TS(),startTime:nowTime(),startDate:tod()});
+    if(S.sel?._id===id)S.sel={...S.sel,status:"Active"};
+    startTracking(id);
+    render();
+    alert("🚗 Ride started! GPS tracking is now active.");
+  }catch(e){alert("Error: "+e.message);}
+};
+
+window.completeRide=async function(id){
+  const ride=S.rides.find(r=>r._id===id);if(!ride)return;
+  const kmStr=prompt("Enter distance in kilometres (e.g. 8.5):");
+  if(!kmStr)return;
+  const km=parseFloat(kmStr)||0;
+  const waitStr=prompt("Enter waiting/traffic time in minutes (e.g. 5):");
+  const wait=parseFloat(waitStr)||0;
+  const night=isNightTime();
+  const fare=Math.round(calcFare(km,wait,S.pricing,night,ride.isAirport));
+  if(!confirm(`Calculated fare: ${fmt(fare)}\n\nKm: ${km} | Wait: ${wait} mins${night?" | Night surcharge applied":""}${ride.isAirport?" | Airport fee applied":""}\n\nConfirm completion?`))return;
+  try{
+    await db.collection("rides").doc(id).update({status:"Completed",fare,distanceKm:km,durationMins:wait,completedAt:TS(),endTime:nowTime(),endDate:tod(),isNight:night,paymentStatus:"Paid"});
+    if(ride.driverId)await db.collection("drivers").doc(ride.driverId).update({status:"Online",currentRideId:null,totalRides:firebase.firestore.FieldValue.increment(1),totalEarnings:firebase.firestore.FieldValue.increment(fare)});
+    stopTracking();
+    if(S.sel?._id===id)S.sel={...S.sel,status:"Completed",fare};
+    render();
+  }catch(e){alert("Error: "+e.message);}
+};
+
+window.cancelRide=async function(id){
+  if(!confirm("Cancel this ride?"))return;
+  const ride=S.rides.find(r=>r._id===id);
+  try{
+    await db.collection("rides").doc(id).update({status:"Cancelled",cancelledAt:TS()});
+    if(ride?.driverId)await db.collection("drivers").doc(ride.driverId).update({status:"Online",currentRideId:null});
+    if(S.sel?._id===id)S.sel={...S.sel,status:"Cancelled"};
+    render();
+  }catch(e){alert("Error: "+e.message);}
+};
+
+window.deleteRide=async function(id){
+  try{await db.collection("rides").doc(id).delete();}catch(_){}
+  S.sel=null;S.delId=null;render();
+};
+
+// ═══════════════════════════════════════════
+//  DRIVER ACTIONS
+// ═══════════════════════════════════════════
+window.addDriver=async function(){
+  const errEl=document.getElementById("d-err");
+  const f={
+    name:    document.getElementById("d-name")?.value?.trim(),
+    phone:   document.getElementById("d-phone")?.value?.trim(),
+    vehicle: document.getElementById("d-vehicle")?.value?.trim(),
+    plate:   document.getElementById("d-plate")?.value?.trim().toUpperCase(),
+    color:   document.getElementById("d-color")?.value?.trim(),
+    license: document.getElementById("d-license")?.value?.trim(),
+  };
+  if(!f.name){if(errEl)errEl.textContent="Driver name required.";return;}
+  if(!f.phone){if(errEl)errEl.textContent="Phone required.";return;}
+  if(!f.vehicle){if(errEl)errEl.textContent="Vehicle type required.";return;}
+  if(!f.plate){if(errEl)errEl.textContent="Plate number required.";return;}
+  try{
+    await db.collection("drivers").add({...f,status:"Offline",totalRides:0,totalEarnings:0,rating:5.0,createdAt:TS(),createdBy:S.user.email});
+    ["d-name","d-phone","d-vehicle","d-plate","d-color","d-license"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+    if(errEl)errEl.textContent="";
+    const okEl=document.getElementById("d-ok");if(okEl){okEl.textContent="✅ Driver added!";setTimeout(()=>{if(okEl)okEl.textContent="";},3000);}
+  }catch(e){if(errEl)errEl.textContent="Error: "+e.message;}
+};
+
+window.updateDriverStatus=async function(id,status){
+  try{await db.collection("drivers").doc(id).update({status});}catch(e){alert("Error: "+e.message);}
+};
+
+window.deleteDriver=async function(id){
+  if(!confirm("Delete this driver?"))return;
+  try{await db.collection("drivers").doc(id).delete();}catch(_){}
+  S.sel=null;render();
+};
+
+// ═══════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════
+window.saveSettings=async function(){
+  const p={
+    baseFare:      Number(document.getElementById("s-base")?.value)||DEFAULT_PRICING.baseFare,
+    perKm:         Number(document.getElementById("s-perkm")?.value)||DEFAULT_PRICING.perKm,
+    perMinWaiting: Number(document.getElementById("s-permin")?.value)||DEFAULT_PRICING.perMinWaiting,
+    minFare:       Number(document.getElementById("s-min")?.value)||DEFAULT_PRICING.minFare,
+    nightSurcharge:Number(document.getElementById("s-night")?.value)||DEFAULT_PRICING.nightSurcharge,
+    airportFee:    Number(document.getElementById("s-airport")?.value)||DEFAULT_PRICING.airportFee,
+    bookingFee:    Number(document.getElementById("s-booking")?.value)||DEFAULT_PRICING.bookingFee,
+  };
+  try{
+    await db.collection("settings").doc("pricing").set(p);
+    const okEl=document.getElementById("s-ok");
+    if(okEl){okEl.textContent="✅ Settings saved!";setTimeout(()=>{if(okEl)okEl.textContent="";},3000);}
+  }catch(e){alert("Error: "+e.message);}
+};
+
+// ═══════════════════════════════════════════
+//  PDF REPORT
+// ═══════════════════════════════════════════
+window.generatePDF=function(){
+  if(!window.jspdf){alert("PDF library loading. Try again.");return;}
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const pfmt=n=>"NGN "+Number(n).toLocaleString();
+  const mb=S.rides.filter(r=>{const d=new Date(r.date||r.created?.toDate?.()?.toISOString()?.split("T")[0]||"");return d.getMonth()===S.reportMonth&&d.getFullYear()===S.reportYear;});
+  const rev=mb.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
+  doc.setFillColor(13,31,54);doc.rect(0,0,210,42,"F");
+  doc.setTextColor(125,211,252);doc.setFontSize(22);doc.setFont("helvetica","bold");doc.text("ApartBook Transport",14,18);
+  doc.setFontSize(11);doc.setFont("helvetica","normal");doc.text("Monthly Ride Revenue Report",14,28);
+  doc.setFontSize(10);doc.text(`${MN[S.reportMonth]} ${S.reportYear}`,14,38);
+  doc.setTextColor(120,120,120);doc.setFontSize(9);doc.text(`Generated: ${new Date().toLocaleString()}  by ${S.user?.email||""}`,14,52);
+  doc.setFontSize(11);doc.setFont("helvetica","bold");doc.setTextColor(40,40,40);doc.text("Summary",14,64);
+  doc.autoTable({startY:68,head:[["Metric","Value"]],theme:"grid",
+    body:[
+      ["Total Rides",mb.length],
+      ["Completed",mb.filter(r=>r.status==="Completed").length],
+      ["Cancelled",mb.filter(r=>r.status==="Cancelled").length],
+      ["Pending/Active",mb.filter(r=>["Pending","Active"].includes(r.status)).length],
+      ["Total Distance",mb.reduce((s,r)=>s+(r.distanceKm||0),0).toFixed(1)+" km"],
+      ["Total Revenue",pfmt(rev)],
+      ["Average Fare",mb.filter(r=>r.status==="Completed").length?pfmt(Math.round(rev/mb.filter(r=>r.status==="Completed").length)):"NGN 0"],
+    ],
+    headStyles:{fillColor:[14,165,233],textColor:255,fontStyle:"bold"},styles:{fontSize:10},columnStyles:{0:{cellWidth:120}}
+  });
+  const y2=doc.lastAutoTable.finalY+10;
+  doc.text("Ride Details",14,y2);
+  doc.autoTable({startY:y2+4,theme:"striped",
+    head:[["Passenger","Driver","Pickup","Dropoff","Km","Status","Fare"]],
+    body:mb.length?mb.map(r=>[r.passenger||"—",r.driverName||"—",(r.pickup||"—").slice(0,20),(r.dropoff||"—").slice(0,20),(r.distanceKm||0).toFixed(1),r.status||"—",pfmt(r.fare||0)]):[["No rides this month","","","","","",""]],
+    headStyles:{fillColor:[14,165,233],textColor:255,fontSize:8},styles:{fontSize:7.5}
+  });
+  const pg=doc.internal.getNumberOfPages();
+  for(let i=1;i<=pg;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(150,150,150);doc.text(`ApartBook Transport  |  Page ${i} of ${pg}`,14,287);}
+  doc.save(`ABTransport-${MN[S.reportMonth]}-${S.reportYear}.pdf`);
+};
+
+window.exportCSV=function(){
+  const rows=[
+    ["ApartBook Transport — Ride Export"],
+    [`Exported: ${new Date().toLocaleString()}`],
+    [`Total Rides: ${S.rides.length}`],
+    [],
+    ["#","Passenger","Phone","Pickup","Dropoff","Driver","Vehicle","Plate","Date","Time","Distance Km","Wait Mins","Fare NGN","Status","Payment","Night Ride","Airport","Notes","Created By"],
+  ];
+  S.rides.forEach((r,i)=>{
+    rows.push([i+1,r.passenger||"",r.phone||"",r.pickup||"",r.dropoff||"",r.driverName||"",r.vehicle||"",r.plate||"",r.date||"",r.time||"",r.distanceKm||0,r.durationMins||0,r.fare||0,r.status||"",r.paymentStatus||"",r.isNight?"Yes":"No",r.isAirport?"Yes":"No",r.notes||"",r.createdBy||""]);
+  });
+  const rev=S.rides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
+  rows.push([],[],["--- SUMMARY ---"],["Total Rides",S.rides.length],["Completed",S.rides.filter(r=>r.status==="Completed").length],["Total Revenue (NGN)",rev],["Total Distance Km",S.rides.reduce((s,r)=>s+(r.distanceKm||0),0).toFixed(1)],["Total Drivers",S.drivers.length]);
+  const csv=rows.map(r=>r.map(c=>{const s=String(c==null?"":c).replace(/"/g,'""');return s.includes(",")||s.includes("\n")||s.includes('"')?`"${s}"`:s;}).join(",")).join("\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=`ABTransport-${tod()}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+};
+
+// ═══════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════
+window.goTo=function(tab){
+  S.tab=tab;S.sel=null;S.editMode=false;
+  if(tab==="Audit"&&!auditUnsub)auditUnsub=db.collection("audit_log").orderBy("timestamp","desc").limit(150).onSnapshot(snap=>{S.auditLog=snap.docs.map(d=>({...d.data(),_id:d.id}));render();});
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(tab==="Live Map")setTimeout(()=>initMap(),100);
+};
+window.openSel=function(id){S.sel=S.rides.find(x=>x._id===id)||S.drivers.find(x=>x._id===id)||null;render();};
+window.closeSel=function(){S.sel=null;S.editMode=false;render();};
+window.setDelId=function(id){S.delId=id;render();};
+window.clearDel=function(){S.delId=null;render();};
+window.setSearch=function(v){S.search=v;render();};
+window.setFilter=function(v){S.filterStatus=v;render();};
+window.setReportMonth=function(v){S.reportMonth=Number(v);render();};
+window.setReportYear=function(v){S.reportYear=Number(v);render();};
+window.togglePw=function(){S.showPw=!S.showPw;render();};
+
+// ═══════════════════════════════════════════
+//  LIVE MAP
+// ═══════════════════════════════════════════
+let leafletMap=null,driversLayer={};
+
+function initMap(){
+  const el=document.getElementById("live-map");
+  if(!el)return;
+  if(leafletMap){leafletMap.invalidateSize();return;}
+  leafletMap=L.map("live-map").setView([6.5244,3.3792],12); // Lagos default
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:'© OpenStreetMap',maxZoom:19}).addTo(leafletMap);
+  // Listen for live driver locations
+  rtdb.ref("drivers_live").on("value",snap=>{
+    const data=snap.val()||{};
+    // remove old markers
+    Object.values(driversLayer).forEach(m=>{if(m&&leafletMap)try{leafletMap.removeLayer(m);}catch(_){}});
+    driversLayer={};
+    Object.entries(data).forEach(([uid,loc])=>{
+      if(!loc.lat||!loc.lng)return;
+      const icon=L.divIcon({html:`<div style="background:#0ea5e9;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px rgba(14,165,233,.8)"></div>`,iconSize:[14,14],className:""});
+      const marker=L.marker([loc.lat,loc.lng],{icon})
+        .bindPopup(`🚗 ${loc.driverName||"Driver"}<br>Speed: ${Math.round((loc.speed||0)*3.6)} km/h`)
+        .addTo(leafletMap);
+      driversLayer[uid]=marker;
+    });
+  });
+  // Try to center on user location
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      if(leafletMap)leafletMap.setView([pos.coords.latitude,pos.coords.longitude],13);
+    },()=>{});
+  }
+}
+
+// ═══════════════════════════════════════════
+//  RENDER: LOGIN
+// ═══════════════════════════════════════════
+function renderLogin(){return`
+  <div class="login-wrap">
+    <div class="login-glow"></div>
+    <div style="width:100%;max-width:400px;position:relative">
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:28px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          ${LOGO(44)}
+          <span style="font-size:22px;font-weight:800;background:linear-gradient(135deg,#7dd3fc,#0ea5e9);-webkit-background-clip:text;-webkit-text-fill-color:transparent">ApartBook Transport</span>
+        </div>
+        <div style="font-size:13px;color:#64748b">Ride & Fleet Management System</div>
+      </div>
+      <div class="login-card">
+        <div style="font-size:20px;font-weight:700;margin-bottom:4px">Welcome back</div>
+        <div style="font-size:13px;color:#64748b;margin-bottom:20px">Sign in to manage your fleet</div>
+        <label>Email address</label>
+        <input id="li-email" type="email" placeholder="admin@yourdomain.com" onkeydown="if(event.key==='Enter')doLogin()"/>
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input id="li-pass" type="${S.showPw?"text":"password"}" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"/>
+          <button class="pw-toggle" onclick="togglePw()">${S.showPw?"Hide":"Show"}</button>
+        </div>
+        ${S.loginErr?`<div class="err" style="margin:8px 0 4px">${esc(S.loginErr)}</div>`:""}
+        <button class="btn-login" onclick="doLogin()" ${S.loginBusy?"disabled":""}>${S.loginBusy?"Signing in…":"Sign In →"}</button>
+      </div>
+    </div>
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: HEADER
+// ═══════════════════════════════════════════
+function renderHeader(){
+  const TABS=[{n:"Dashboard",s:true},{n:"New Ride",s:isMgr()},{n:"Live Map",s:true},{n:"Drivers",s:isMgr()},{n:"Rides",s:true},{n:"Reports",s:isMgr()},{n:"Settings",s:isAdmin()},{n:"Audit",s:isAdmin()}].filter(t=>t.s);
+  const activeRides=S.rides.filter(r=>r.status==="Active").length;
+  return`
+  <div class="hdr">
+    <div class="hdr-top">
+      <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+        ${LOGO(28)}
+        <span class="logo-txt">AB Transport</span>
+      </div>
+      ${activeRides>0?`<div class="pulse" style="background:#22c55e;color:#fff;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;flex-shrink:0">🚗 ${activeRides} Active</div>`:""}
+      <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:5px;background:#111827;border:1px solid #2a4a6b;border-radius:8px;padding:4px 8px 4px 5px">
+          ${av(S.user.email,22,"#0d1f36","#0ea5e9","#7dd3fc")}
+          <div style="max-width:80px">
+            <div style="font-size:10px;color:#e2e8f0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(S.user.email.split("@")[0])}</div>
+            <div style="font-size:9px;color:#22c55e;text-transform:capitalize">${esc(S.profile?.role||"")}</div>
+          </div>
+        </div>
+        <button onclick="doLogout()" style="display:flex;flex-direction:column;align-items:center;background:#2d0d0d;border:1.5px solid rgba(239,68,68,.5);border-radius:8px;padding:5px 9px;cursor:pointer;gap:1px;flex-shrink:0">
+          <span style="font-size:14px;color:#ef4444;line-height:1">⏻</span>
+          <span style="font-size:8px;color:#ef4444;font-weight:700;letter-spacing:.04em">OUT</span>
+        </button>
+      </div>
+    </div>
+    <div class="hdr-tabs">
+      ${TABS.map(t=>`<button class="tab-btn ${S.tab===t.n?"active":""}" onclick="goTo('${t.n}')">${t.n}</button>`).join("")}
+    </div>
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: DASHBOARD
+// ═══════════════════════════════════════════
+function renderDashboard(){
+  const t=tod();
+  const now=new Date();const cm=now.getMonth();const cy=now.getFullYear();
+  const todayRides=S.rides.filter(r=>r.date===t||r.created?.toDate?.()?.toISOString()?.startsWith(t));
+  const activeRides=S.rides.filter(r=>r.status==="Active");
+  const monthRides=S.rides.filter(r=>{const d=new Date(r.date||"");return d.getMonth()===cm&&d.getFullYear()===cy;});
+  const monthRev=monthRides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
+  const todayRev=todayRides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
+  const totalRev=S.rides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
+  const onlineDrivers=S.drivers.filter(d=>d.status==="Online"||d.status==="On Ride");
+  const avgFare=S.rides.filter(r=>r.status==="Completed").length?Math.round(totalRev/S.rides.filter(r=>r.status==="Completed").length):0;
+  const totalKm=S.rides.reduce((s,r)=>s+(r.distanceKm||0),0);
+
+  return`
+  <div class="pg-title">Fleet Overview <span style="color:#64748b;font-size:13px;font-weight:400">— ${t}</span></div>
+
+  <!-- TRACKING BAR (shown if driver is tracking) -->
+  ${S.isTracking?`<div class="driver-track-bar">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="pulse" style="width:10px;height:10px;background:#22c55e;border-radius:50%"></div>
+        <span style="font-size:13px;font-weight:600;color:#22c55e">GPS Tracking Active</span>
+        <span style="font-size:11px;color:#64748b">Ride #${(S.trackingRideId||"").slice(-6)}</span>
+      </div>
+      <button class="btn-red" style="font-size:11px;padding:6px 12px" onclick="if(confirm('Stop GPS tracking?'))stopTracking();render()">Stop Tracking</button>
+    </div>
+  </div>`:""}
+
+  <div class="stats">
+    <div class="stat" style="border-top:3px solid #0ea5e9"><div class="stat-l">Total rides</div><div class="stat-v" style="color:#0ea5e9">${S.rides.length}</div></div>
+    <div class="stat" style="border-top:3px solid #22c55e"><div class="stat-l">Active now</div><div class="stat-v" style="color:#22c55e">${activeRides.length}</div></div>
+    <div class="stat" style="border-top:3px solid #f59e0b"><div class="stat-l">Rides today</div><div class="stat-v" style="color:#f59e0b">${todayRides.length}</div></div>
+    <div class="stat" style="border-top:3px solid #a78bfa"><div class="stat-l">Online drivers</div><div class="stat-v" style="color:#a78bfa">${onlineDrivers.length}/${S.drivers.length}</div></div>
+    <div class="stat" style="border-top:3px solid #22c55e"><div class="stat-l">Revenue today</div><div class="stat-v" style="color:#22c55e;font-size:15px">${fmt(todayRev)}</div></div>
+    <div class="stat wide" style="border-top:3px solid #0ea5e9;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div><div class="stat-l">Monthly gross — ${MN[cm]}</div><div class="stat-v" style="color:#0ea5e9;font-size:16px">${fmt(monthRev)}</div></div>
+      <div><div class="stat-l">All-time revenue</div><div class="stat-v" style="color:#22c55e;font-size:15px">${fmt(totalRev)}</div></div>
+      <div><div class="stat-l">Avg fare / km</div><div class="stat-v" style="color:#f59e0b;font-size:15px">${fmt(avgFare)} / ${totalKm.toFixed(0)}km</div></div>
+    </div>
+  </div>
+
+  <!-- ACTIVE RIDES -->
+  <div class="card">
+    <div class="card-title">🚗 Active Rides (${activeRides.length})</div>
+    ${activeRides.length===0?`<div class="empty">No active rides right now.</div>`:""}
+    ${activeRides.map(r=>`
+    <div class="ride-item" onclick="openSel('${r._id}')">
+      ${av(r.passenger,36,"#0d1f36","#0ea5e9","#7dd3fc")}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600">${esc(r.passenger)}</div>
+        <div style="font-size:11px;color:#64748b;margin-top:2px">📍 ${esc(r.pickup)} → ${esc(r.dropoff)}</div>
+        <div style="font-size:11px;color:#0ea5e9;margin-top:2px">🚙 ${esc(r.driverName||"—")} · ${esc(r.plate||"—")}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        ${rideBadge(r.status)}
+        <div style="font-size:10px;color:#64748b;margin-top:4px">${r.time||""}</div>
+      </div>
+    </div>`).join("")}
+  </div>
+
+  <!-- DRIVER STATUS -->
+  <div class="card">
+    <div class="card-title">👨‍✈️ Driver Status (${S.drivers.length})</div>
+    ${S.drivers.length===0?`<div class="empty">No drivers yet. Go to Drivers tab to add.</div>`:""}
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+      ${S.drivers.map(d=>`
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:9px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-weight:500;font-size:13px">${esc(d.name)}</span>
+          ${driverBadge(d.status||"Offline")}
+        </div>
+        <div style="font-size:11px;color:#64748b">${esc(d.vehicle||"—")} · ${esc(d.plate||"—")}</div>
+        <div style="font-size:11px;color:#0ea5e9;margin-top:3px">${d.totalRides||0} rides · ${fmt(d.totalEarnings||0)}</div>
+      </div>`).join("")}
+    </div>
+  </div>
+
+  <!-- RECENT RIDES -->
+  <div class="card">
+    <div class="card-title">🕐 Recent Rides</div>
+    ${S.rides.slice(0,6).map(r=>`
+    <div class="ride-item" onclick="openSel('${r._id}')">
+      ${av(r.passenger,32,"#0d1f36","#0ea5e9","#7dd3fc")}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:500">${esc(r.passenger)}</div>
+        <div style="font-size:10px;color:#64748b">${esc(r.pickup||"—")} → ${esc(r.dropoff||"—")}</div>
+        <div style="font-size:10px;color:#64748b">${esc(r.driverName||"—")} · ${r.date||""}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        ${rideBadge(r.status)}
+        ${r.fare?`<div style="font-size:11px;color:#22c55e;font-weight:500;margin-top:3px">${fmt(r.fare)}</div>`:""}
+      </div>
+    </div>`).join("")}
+    ${S.rides.length===0?`<div class="empty">No rides yet.</div>`:""}
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: NEW RIDE
+// ═══════════════════════════════════════════
+function renderNewRide(){
+  if(!isMgr())return`<div class="empty">Manager access required.</div>`;
+  const availDrivers=S.drivers.filter(d=>d.status!=="On Ride");
+  return`
+  <div class="pg-title">Book New Ride</div>
+  <div class="card">
+    <div class="frow">
+      <div class="fcol"><label>Passenger name *</label><input id="r-passenger" placeholder="Full name"/></div>
+      <div class="fcol"><label>Phone (WhatsApp) 📱</label><input id="r-phone" placeholder="0801-234-5678"/></div>
+    </div>
+    <div class="frow">
+      <div class="fcol"><label>Pickup location *</label><input id="r-pickup" placeholder="e.g. Lekki Phase 1 Gate"/></div>
+      <div class="fcol"><label>Dropoff location *</label><input id="r-dropoff" placeholder="e.g. Murtala Airport"/></div>
+    </div>
+    <div class="frow">
+      <div class="fcol"><label>Date *</label><input id="r-date" type="date" value="${tod()}"/></div>
+      <div class="fcol"><label>Time *</label><input id="r-time" type="time" value="${nowTime()}"/></div>
+    </div>
+    <label>Assign driver *</label>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:12px">
+      ${availDrivers.length===0?`<div style="color:#64748b;font-size:13px;grid-column:1/-1">No available drivers. All are on ride or offline.</div>`:""}
+      ${availDrivers.map(d=>`
+      <div onclick="document.getElementById('r-driver').value='${d._id}';document.querySelectorAll('.dcard').forEach(x=>x.style.borderColor='#2a4a6b');this.style.borderColor='#0ea5e9'"
+        class="dcard" style="border:2px solid #2a4a6b;border-radius:9px;padding:10px 12px;cursor:pointer;background:#111827;transition:.2s">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <span style="font-weight:500;font-size:12px;color:#e2e8f0">${esc(d.name)}</span>
+          ${driverBadge(d.status||"Offline")}
+        </div>
+        <div style="font-size:10px;color:#64748b">${esc(d.vehicle||"—")} · ${esc(d.plate||"—")}</div>
+        <div style="font-size:10px;color:#0ea5e9;margin-top:2px">${esc(d.color||"")} · ${d.totalRides||0} rides</div>
+      </div>`).join("")}
+    </div>
+    <select id="r-driver" style="display:none">
+      <option value="">— Select driver —</option>
+      ${availDrivers.map(d=>`<option value="${d._id}">${esc(d.name)}</option>`).join("")}
+    </select>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;background:#111827;border:1px solid #2a4a6b;border-radius:8px;padding:10px 14px">
+      <input id="r-airport" type="checkbox" style="width:18px;height:18px;margin-bottom:0;flex-shrink:0"/>
+      <div>
+        <div style="font-size:13px;font-weight:500">Airport ride ✈️</div>
+        <div style="font-size:11px;color:#64748b">Adds ${fmt(S.pricing.airportFee)} airport surcharge</div>
+      </div>
+    </div>
+
+    <label>Special notes</label>
+    <textarea id="r-notes" placeholder="Any special instructions for driver…"></textarea>
+
+    <div class="info-box">
+      <div style="font-size:11px;color:#64748b;margin-bottom:6px">📊 Current Pricing</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px">
+        <span>Base: <strong style="color:#7dd3fc">${fmt(S.pricing.baseFare)}</strong></span>
+        <span>Per km: <strong style="color:#7dd3fc">${fmt(S.pricing.perKm)}</strong></span>
+        <span>Per min: <strong style="color:#7dd3fc">${fmt(S.pricing.perMinWaiting)}</strong></span>
+        <span>Min fare: <strong style="color:#7dd3fc">${fmt(S.pricing.minFare)}</strong></span>
+        ${isNightTime()?`<span style="color:#f59e0b">🌙 Night surcharge: ${S.pricing.nightSurcharge}x active</span>`:""}
+      </div>
+    </div>
+
+    <div id="r-err" class="err"></div>
+    <div id="r-ok" class="ok"></div>
+    <button class="btnp" onclick="addRide()" style="width:100%;padding:13px;font-size:14px">🚗 Book Ride</button>
+    <div style="font-size:11px;color:#64748b;margin-top:8px;text-align:center">💬 You'll be prompted to send a WhatsApp confirmation after booking.</div>
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: LIVE MAP
+// ═══════════════════════════════════════════
+function renderLiveMap(){
+  const activeRides=S.rides.filter(r=>r.status==="Active");
+  return`
+  <div class="pg-title">🗺️ Live Fleet Map</div>
+  <div class="card">
+    <div class="map-controls">
+      <div style="flex:1;font-size:13px;color:#64748b">
+        Showing live driver locations on map. Updates every 5 seconds automatically.
+      </div>
+      <button class="btnp" style="font-size:12px;padding:7px 14px" onclick="if(leafletMap)leafletMap.setView([6.5244,3.3792],12)">Reset View</button>
+    </div>
+    <div id="live-map"></div>
+    <div class="map-legend">
+      <span><span class="map-legend-dot" style="background:#0ea5e9"></span>Live driver</span>
+      <span><span class="map-legend-dot" style="background:#22c55e"></span>Available</span>
+      <span><span class="map-legend-dot" style="background:#ef4444"></span>On ride</span>
+    </div>
+  </div>
+
+  <!-- ACTIVE RIDES ON MAP -->
+  <div class="card">
+    <div class="card-title">🚗 Active Rides (${activeRides.length})</div>
+    ${activeRides.length===0?`<div class="empty">No active rides. Map will show drivers once rides are started.</div>`:""}
+    ${activeRides.map(r=>`
+    <div class="ride-item">
+      ${av(r.passenger,36,"#0d1f36","#0ea5e9","#7dd3fc")}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600">${esc(r.passenger)}</div>
+        <div style="font-size:11px;color:#64748b">📍 ${esc(r.pickup)} → ${esc(r.dropoff)}</div>
+        <div style="font-size:11px;color:#0ea5e9;margin-top:2px">🚙 ${esc(r.driverName||"—")} · ${esc(r.plate||"—")}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">
+        <button class="btn-green" style="font-size:10px;padding:5px 10px" onclick="completeRide('${r._id}')">✅ Complete</button>
+        <button class="btn-red" style="font-size:10px;padding:5px 10px" onclick="cancelRide('${r._id}')">❌ Cancel</button>
+      </div>
+    </div>`).join("")}
+  </div>
+
+  <!-- DRIVER TRACKING PANEL (for drivers) -->
+  <div class="card" style="border-color:rgba(14,165,233,.4)">
+    <div class="card-title">📍 Driver GPS Panel</div>
+    <div style="font-size:13px;color:#64748b;margin-bottom:12px;line-height:1.6">
+      If you are a driver, tap the button below to start sharing your live location. Your location will appear on the map above for the dispatcher to see.
+    </div>
+    ${S.isTracking?`
+    <div style="background:#0d2d1a;border:1px solid rgba(34,197,94,.4);border-radius:8px;padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
+      <div class="pulse" style="width:12px;height:12px;background:#22c55e;border-radius:50%"></div>
+      <span style="color:#22c55e;font-weight:500">GPS tracking is ACTIVE — your location is being shared</span>
+    </div>
+    <button class="btn-red" style="width:100%;padding:11px" onclick="stopTracking();render()">⏹ Stop Sharing Location</button>`:`
+    <button class="btn-green" style="width:100%;padding:11px;font-size:14px" onclick="startTracking('manual-'+Date.now());render()">📍 Start Sharing My Location</button>`}
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: DRIVERS
+// ═══════════════════════════════════════════
+function renderDrivers(){
+  if(!isMgr())return`<div class="empty">Manager access required.</div>`;
+  return`
+  <div class="pg-title">Driver Management (${S.drivers.length})</div>
+
+  <!-- ADD DRIVER FORM -->
+  <div class="card">
+    <div class="card-title">➕ Add New Driver</div>
+    <div class="frow">
+      <div class="fcol"><label>Full name *</label><input id="d-name" placeholder="Driver full name"/></div>
+      <div class="fcol"><label>Phone *</label><input id="d-phone" placeholder="0801-234-5678"/></div>
+    </div>
+    <div class="frow">
+      <div class="fcol"><label>Vehicle type *</label>
+        <select id="d-vehicle">
+          <option value="">— Select —</option>
+          <option>Toyota Camry</option><option>Toyota Corolla</option><option>Toyota Sienna</option>
+          <option>Honda Civic</option><option>Honda Accord</option><option>Honda CR-V</option>
+          <option>Hyundai Elantra</option><option>Hyundai Sonata</option>
+          <option>Kia Rio</option><option>Kia Sportage</option>
+          <option>Ford Explorer</option><option>Lexus ES350</option>
+          <option>Mercedes C-Class</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fcol"><label>Plate number *</label><input id="d-plate" placeholder="e.g. LAG-123-AA" style="text-transform:uppercase"/></div>
+    </div>
+    <div class="frow">
+      <div class="fcol"><label>Car color</label><input id="d-color" placeholder="e.g. Black, Silver"/></div>
+      <div class="fcol"><label>Driver's license no.</label><input id="d-license" placeholder="License number"/></div>
+    </div>
+    <div id="d-err" class="err"></div>
+    <div id="d-ok" class="ok"></div>
+    <button class="btnp" onclick="addDriver()">Add Driver</button>
+  </div>
+
+  <!-- DRIVERS LIST -->
+  <div class="tblw">
+    <table>
+      <thead><tr><th>Driver</th><th>Vehicle</th><th>Plate</th><th>Status</th><th>Rides</th><th>Earnings</th><th></th></tr></thead>
+      <tbody>
+        ${S.drivers.length===0?`<tr><td colspan="7" class="empty">No drivers yet.</td></tr>`:""}
+        ${S.drivers.map(d=>`
+        <tr onclick="openSel('${d._id}')">
+          <td><div style="display:flex;align-items:center;gap:8px">
+            ${av(d.name,28,"#0d1f36","#0ea5e9","#7dd3fc")}
+            <div><div style="font-weight:500">${esc(d.name)}</div><div style="font-size:10px;color:#64748b">${esc(d.phone||"—")}</div></div>
+          </div></td>
+          <td style="font-size:12px">${esc(d.vehicle||"—")}</td>
+          <td style="font-size:12px;color:#0ea5e9;font-weight:500">${esc(d.plate||"—")}</td>
+          <td>${driverBadge(d.status||"Offline")}</td>
+          <td style="color:#7dd3fc;font-weight:500">${d.totalRides||0}</td>
+          <td style="color:#22c55e;font-size:12px;font-weight:500">${fmt(d.totalEarnings||0)}</td>
+          <td><button class="btn" style="font-size:10px;padding:4px 10px" onclick="event.stopPropagation();openSel('${d._id}')">View</button></td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: ALL RIDES
+// ═══════════════════════════════════════════
+function renderRides(){
+  const filtered=S.rides.filter(r=>{
+    const q=S.search.toLowerCase();
+    return(!q||r.passenger?.toLowerCase().includes(q)||r.driverName?.toLowerCase().includes(q)||r.pickup?.toLowerCase().includes(q)||r.dropoff?.toLowerCase().includes(q))&&(S.filterStatus==="All"||r.status===S.filterStatus);
+  });
+  return`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+    <div class="pg-title" style="margin-bottom:0">All Rides <span style="color:#64748b;font-size:13px;font-weight:400">(${filtered.length})</span></div>
+    ${isMgr()?`<button class="btnp" onclick="goTo('New Ride')">+ New Ride</button>`:""}
+  </div>
+  <div class="search-row">
+    <input placeholder="Search passenger, driver, location…" value="${esc(S.search)}" oninput="setSearch(this.value)"/>
+    <select onchange="setFilter(this.value)">
+      <option value="All" ${S.filterStatus==="All"?"selected":""}>All statuses</option>
+      ${RIDE_STATUSES.map(s=>`<option value="${s}" ${S.filterStatus===s?"selected":""}>${s}</option>`).join("")}
+    </select>
+  </div>
+  <div class="tblw">
+    <table>
+      <thead><tr><th>Passenger</th><th>Driver</th><th>Pickup</th><th>Dropoff</th><th>Date</th><th>Km</th><th>Fare</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        ${filtered.length===0?`<tr><td colspan="9" class="empty">No rides found.</td></tr>`:""}
+        ${filtered.map(r=>`
+        <tr onclick="openSel('${r._id}')">
+          <td><div style="display:flex;align-items:center;gap:7px">
+            ${av(r.passenger,26,"#0d1f36","#0ea5e9","#7dd3fc")}
+            <div><div style="font-weight:500;font-size:12px">${esc(r.passenger)}</div><div style="font-size:10px;color:#64748b">${esc(r.phone||"—")}</div></div>
+          </div></td>
+          <td style="font-size:11px"><div style="font-weight:500">${esc(r.driverName||"—")}</div><div style="color:#64748b">${esc(r.plate||"—")}</div></td>
+          <td style="font-size:11px;color:#64748b;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.pickup||"—")}</td>
+          <td style="font-size:11px;color:#64748b;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.dropoff||"—")}</td>
+          <td style="font-size:11px;color:#64748b;white-space:nowrap">${r.date||""}</td>
+          <td style="font-size:11px">${(r.distanceKm||0).toFixed(1)}</td>
+          <td style="font-size:12px;color:#22c55e;font-weight:500">${r.fare?fmt(r.fare):"—"}</td>
+          <td>${rideBadge(r.status)}</td>
+          <td><button class="btn" style="font-size:10px;padding:4px 9px" onclick="event.stopPropagation();openSel('${r._id}')">View</button></td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: REPORTS
+// ═══════════════════════════════════════════
+function renderReports(){
+  if(!isMgr())return`<div class="empty">Manager access required.</div>`;
+  const mb=S.rides.filter(r=>{const d=new Date(r.date||"");return d.getMonth()===S.reportMonth&&d.getFullYear()===S.reportYear;});
+  const rev=mb.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
+  const totalRev=S.rides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
+  const topDriver=S.drivers.sort((a,b)=>(b.totalEarnings||0)-(a.totalEarnings||0))[0];
+  const maxEarnings=Math.max(...S.drivers.map(d=>d.totalEarnings||0),1);
+  return`
+  <div class="pg-title">Reports &amp; Analytics</div>
+
+  <!-- SUMMARY -->
+  <div class="card" style="border-left:3px solid #0ea5e9">
+    <div class="card-title">📊 Data Summary</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Total rides stored</div><div style="font-size:20px;font-weight:700;color:#0ea5e9">${S.rides.length}</div></div>
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Total drivers</div><div style="font-size:20px;font-weight:700;color:#22c55e">${S.drivers.length}</div></div>
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">All-time revenue</div><div style="font-size:15px;font-weight:700;color:#22c55e">${fmt(totalRev)}</div></div>
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Total km driven</div><div style="font-size:15px;font-weight:700;color:#0ea5e9">${S.rides.reduce((s,r)=>s+(r.distanceKm||0),0).toFixed(0)} km</div></div>
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Top driver</div><div style="font-size:13px;font-weight:700;color:#f59e0b">${topDriver?esc(topDriver.name):"—"}</div></div>
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Completion rate</div><div style="font-size:15px;font-weight:700;color:#22c55e">${S.rides.length?Math.round(S.rides.filter(r=>r.status==="Completed").length/S.rides.length*100):0}%</div></div>
+    </div>
+    <button onclick="exportCSV()" style="width:100%;padding:14px;background:linear-gradient(135deg,#0d2d1a,#0a2010);border:1.5px solid rgba(34,197,94,.5);border-radius:11px;color:#22c55e;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:20px">📊</span><span>Download All Rides as Excel / CSV</span>
+    </button>
+    <div style="font-size:11px;color:#64748b;text-align:center">Includes all ${S.rides.length} rides · passenger · driver · distance · fare · payment</div>
+  </div>
+
+  <!-- PDF -->
+  <div class="card">
+    <div class="card-title">📄 Monthly PDF Report</div>
+    <div class="frow">
+      <div class="fcol"><label>Month</label><select onchange="setReportMonth(this.value)">${MN.map((m,i)=>`<option value="${i}" ${i===S.reportMonth?"selected":""}>${m}</option>`).join("")}</select></div>
+      <div class="fcol"><label>Year</label><select onchange="setReportYear(this.value)">${[2024,2025,2026,2027].map(y=>`<option value="${y}" ${y===S.reportYear?"selected":""}>${y}</option>`).join("")}</select></div>
+    </div>
+    <div style="background:#111827;border-radius:9px;padding:13px 15px;margin-bottom:14px">
+      <div style="font-size:10px;color:#64748b;margin-bottom:9px;font-weight:500;text-transform:uppercase;letter-spacing:.04em">Preview: ${MN[S.reportMonth]} ${S.reportYear}</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <div><div style="font-size:10px;color:#64748b">Rides</div><div style="font-size:17px;font-weight:700;color:#0ea5e9">${mb.length}</div></div>
+        <div><div style="font-size:10px;color:#64748b">Completed</div><div style="font-size:17px;font-weight:700;color:#22c55e">${mb.filter(r=>r.status==="Completed").length}</div></div>
+        <div><div style="font-size:10px;color:#64748b">Cancelled</div><div style="font-size:17px;font-weight:700;color:#ef4444">${mb.filter(r=>r.status==="Cancelled").length}</div></div>
+        <div><div style="font-size:10px;color:#64748b">Revenue</div><div style="font-size:15px;font-weight:700;color:#22c55e">${fmt(rev)}</div></div>
+      </div>
+    </div>
+    <button class="btnp" onclick="generatePDF()" style="width:100%;padding:13px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px"><span>📥</span><span>Download PDF Report</span></button>
+  </div>
+
+  <!-- DRIVER EARNINGS -->
+  <div class="card">
+    <div class="card-title">👨‍✈️ Driver Earnings</div>
+    ${S.drivers.length===0?`<div class="empty">No drivers yet.</div>`:""}
+    ${S.drivers.map(d=>`
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px">
+        <span style="color:#7dd3fc;font-weight:500">${esc(d.name)} <span style="color:#64748b;font-weight:400">· ${d.totalRides||0} rides</span></span>
+        <span style="color:#22c55e;font-weight:500">${fmt(d.totalEarnings||0)}</span>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${((d.totalEarnings||0)/maxEarnings*100).toFixed(1)}%;background:linear-gradient(90deg,#0ea5e9,#0ea5e988)"></div></div>
+    </div>`).join("")}
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: SETTINGS
+// ═══════════════════════════════════════════
+function renderSettings(){
+  if(!isAdmin())return`<div class="empty">Admin access required.</div>`;
+  const p=S.pricing;
+  return`
+  <div class="pg-title">⚙️ Settings & Pricing</div>
+  <div class="card">
+    <div class="settings-section">
+      <h4>💰 Fare Pricing Configuration</h4>
+      <div style="background:#0d1f36;border:1px solid rgba(14,165,233,.3);border-radius:8px;padding:11px 13px;font-size:12px;color:#64748b;line-height:1.7;margin-bottom:14px">
+        Fare formula: <strong style="color:#7dd3fc">Base fare + (km × rate) + (wait mins × rate) + booking fee</strong><br>
+        Night surcharge applies 10:00 PM – 5:00 AM · Airport fee added when ride is marked as airport pickup/dropoff.
+      </div>
+      <div class="frow">
+        <div class="fcol"><label>Base fare (₦) per ride</label><input id="s-base" type="number" value="${p.baseFare}"/></div>
+        <div class="fcol"><label>Rate per kilometre (₦)</label><input id="s-perkm" type="number" value="${p.perKm}"/></div>
+      </div>
+      <div class="frow">
+        <div class="fcol"><label>Rate per waiting minute (₦)</label><input id="s-permin" type="number" value="${p.perMinWaiting}"/></div>
+        <div class="fcol"><label>Minimum fare (₦)</label><input id="s-min" type="number" value="${p.minFare}"/></div>
+      </div>
+      <div class="frow">
+        <div class="fcol"><label>Night surcharge multiplier (e.g. 1.5 = 50% extra)</label><input id="s-night" type="number" step="0.1" value="${p.nightSurcharge}"/></div>
+        <div class="fcol"><label>Airport surcharge (₦) flat fee</label><input id="s-airport" type="number" value="${p.airportFee}"/></div>
+      </div>
+      <div class="fcol"><label>Booking/platform fee (₦)</label><input id="s-booking" type="number" value="${p.bookingFee}" style="max-width:200px"/></div>
+    </div>
+
+    <!-- FARE CALCULATOR PREVIEW -->
+    <div class="settings-section">
+      <h4>🧮 Sample Fare Calculator</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
+        ${[{l:"Short trip (3km)",km:3,w:2,a:false},{l:"Medium trip (10km)",km:10,w:5,a:false},{l:"Long trip (25km)",km:25,w:10,a:false},{l:"Airport trip (20km)",km:20,w:5,a:true}].map(ex=>{
+          const fare=Math.round(calcFare(ex.km,ex.w,p,false,ex.a));
+          const night=Math.round(calcFare(ex.km,ex.w,p,true,ex.a));
+          return`<div style="background:#111827;border:1px solid #2a4a6b;border-radius:9px;padding:11px 12px">
+            <div style="font-size:11px;color:#64748b;margin-bottom:4px">${ex.l}</div>
+            <div style="font-size:16px;font-weight:700;color:#0ea5e9">${fmt(fare)}</div>
+            <div style="font-size:10px;color:#f59e0b">🌙 Night: ${fmt(night)}</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+
+    <div id="s-ok" class="ok"></div>
+    <button class="btnp" onclick="saveSettings()" style="width:100%;padding:13px;font-size:14px">💾 Save All Settings</button>
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: AUDIT
+// ═══════════════════════════════════════════
+function renderAudit(){
+  if(!isAdmin())return`<div class="empty">Admin access required.</div>`;
+  return`
+  <div class="pg-title">Audit Log</div>
+  <div style="font-size:13px;color:#64748b;margin-bottom:14px">Every login and logout recorded automatically.</div>
+  <div class="tblw">
+    <table>
+      <thead><tr><th>User</th><th>Action</th><th>Date & Time</th><th>Device</th></tr></thead>
+      <tbody>
+        ${S.auditLog.length===0?`<tr><td colspan="4" class="empty">No records yet.</td></tr>`:""}
+        ${S.auditLog.map(l=>`<tr>
+          <td style="color:#7dd3fc;font-size:11px">${esc(l.email)}</td>
+          <td><span class="badge" style="background:${l.action==="LOGIN"?"#0d1f36":"#2d0d0d"};color:${l.action==="LOGIN"?"#0ea5e9":"#ef4444"}">${l.action}</span></td>
+          <td style="color:#64748b;font-size:11px">${l.timestamp?.toDate?.()?.toLocaleString()||"—"}</td>
+          <td style="color:#475569;font-size:10px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc((l.device||"—").slice(0,60))}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>
+  </div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: RIDE/DRIVER DETAIL MODAL
+// ═══════════════════════════════════════════
+function renderModal(){
+  if(!S.sel)return"";
+  const s=S.sel;
+
+  // DRIVER MODAL
+  if(s.vehicle!==undefined&&s.plate!==undefined){
+    return`<div class="modal-bg" onclick="closeSel()"><div class="modal-box" onclick="event.stopPropagation()">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-size:15px;font-weight:600">Driver Profile</div>
+        <div style="display:flex;gap:7px">
+          ${isAdmin()?`<button class="btnd" style="font-size:11px;padding:5px 10px" onclick="deleteDriver('${s._id}')">Delete</button>`:""}
+          <button class="btn" onclick="closeSel()">✕</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        ${av(s.name,48,"#0d1f36","#0ea5e9","#7dd3fc")}
+        <div><div style="font-size:16px;font-weight:600">${esc(s.name)}</div><div style="font-size:12px;color:#64748b;margin-top:2px">${esc(s.phone||"—")}</div></div>
+        ${driverBadge(s.status||"Offline")}
+      </div>
+      ${DR("Vehicle",esc(s.vehicle||"—"))}
+      ${DR("Plate",`<span style="color:#0ea5e9;font-weight:500">${esc(s.plate||"—")}</span>`)}
+      ${DR("Color",esc(s.color||"—"))}
+      ${DR("License",esc(s.license||"—"))}
+      ${DR("Total rides",`<span style="color:#7dd3fc;font-weight:500">${s.totalRides||0}</span>`)}
+      ${DR("Total earnings",`<span style="color:#22c55e;font-weight:500">${fmt(s.totalEarnings||0)}</span>`)}
+      ${DR("Rating",`⭐ ${(s.rating||5).toFixed(1)}`)}
+      <div style="margin-top:14px">
+        <div style="font-size:12px;color:#64748b;margin-bottom:7px">Update status</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${DRIVER_STATUSES.map(st=>`<button class="btn" style="${(s.status||"Offline")===st?"border-color:#0ea5e9;color:#0ea5e9;font-weight:500":""}" onclick="updateDriverStatus('${s._id}','${st}')">${st}</button>`).join("")}
+        </div>
+      </div>
+      ${s.phone?`<button class="btn-green" style="width:100%;margin-top:12px;justify-content:center;display:flex;align-items:center;gap:7px;padding:10px" onclick="window.open('https://wa.me/${fmtWA(s.phone)}','_blank')">💬 WhatsApp ${esc(s.name.split(" ")[0])}</button>`:""}
+    </div></div>`;
+  }
+
+  // RIDE MODAL
+  const fare=s.fare?fmt(s.fare):s.estimatedFare?`~${fmt(s.estimatedFare)} (est.)`:"-";
+  return`<div class="modal-bg" onclick="closeSel()"><div class="modal-box" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:600">Ride Details</div>
+      <div style="display:flex;gap:7px">
+        ${isAdmin()?`<button class="btnd" style="font-size:11px;padding:5px 10px" onclick="setDelId('${s._id}')">Delete</button>`:""}
+        <button class="btn" onclick="closeSel()">✕</button>
+      </div>
+    </div>
+    ${DR("Passenger",`<strong>${esc(s.passenger)}</strong>`)}
+    ${DR("Phone",esc(s.phone||"—"))}
+    ${DR("Pickup",esc(s.pickup||"—"))}
+    ${DR("Dropoff",esc(s.dropoff||"—"))}
+    ${DR("Date & Time",`${s.date||"—"} ${s.time?fmtTime(s.time):""}`)}
+    ${DR("Driver",esc(s.driverName||"—"))}
+    ${DR("Vehicle",`${esc(s.vehicle||"—")} · <span style="color:#0ea5e9">${esc(s.plate||"—")}</span>`)}
+    ${DR("Distance",s.distanceKm?`${s.distanceKm.toFixed(1)} km`:"Not completed yet")}
+    ${DR("Fare",`<strong style="color:#22c55e">${fare}</strong>${s.isNight?` <span style="color:#f59e0b;font-size:10px">🌙 night rate</span>`:""}${s.isAirport?` <span style="color:#7dd3fc;font-size:10px">✈️ airport</span>`:""}`)}
+    ${DR("Status",rideBadge(s.status))}
+    ${DR("Payment",`<span style="color:${s.paymentStatus==="Paid"?"#22c55e":"#f59e0b"}">${esc(s.paymentStatus||"Unpaid")}</span>`)}
+    ${s.notes?DR("Notes",esc(s.notes)):""}
+    ${DR("Created by",`<span style="color:#64748b;font-size:11px">${esc(s.createdBy||"—")}</span>`)}
+
+    ${isMgr()&&s.status==="Pending"?`
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <button class="btn-green" style="flex:1;justify-content:center;display:flex;align-items:center;gap:6px;padding:11px" onclick="startRide('${s._id}')">🚗 Start Ride</button>
+      <button class="btn-red" style="flex:1;justify-content:center;display:flex;align-items:center;gap:6px;padding:11px" onclick="cancelRide('${s._id}')">❌ Cancel</button>
+    </div>`:""}
+    ${isMgr()&&s.status==="Active"?`
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <button class="btn-green" style="flex:1;justify-content:center;display:flex;align-items:center;gap:6px;padding:11px" onclick="completeRide('${s._id}')">✅ Complete Ride</button>
+      <button class="btn-red" style="padding:11px" onclick="cancelRide('${s._id}')">❌</button>
+    </div>`:""}
+    ${s.phone?`<button style="width:100%;margin-top:10px;background:#0a2d1a;border:1.5px solid rgba(37,211,102,.5);border-radius:9px;padding:10px;color:#25d366;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" onclick="window.open('https://wa.me/${fmtWA(s.phone)}?text=${encodeURIComponent(`Your ride update: ${s.status}. Driver: ${s.driverName||"TBA"}. Plate: ${s.plate||"TBA"}`)}','_blank')">💬 Send WhatsApp Update</button>`:""}
+  </div></div>`;}
+
+// ═══════════════════════════════════════════
+//  RENDER: DELETE CONFIRM
+// ═══════════════════════════════════════════
+function renderDelConfirm(){
+  if(!S.delId)return"";
+  return`<div class="modal-bg" onclick="clearDel()"><div class="modal-box" style="max-width:330px" onclick="event.stopPropagation()">
+    <div style="font-weight:600;margin-bottom:10px;font-size:16px">Delete this ride?</div>
+    <div style="font-size:13px;color:#64748b;margin-bottom:18px">This is permanent and cannot be undone.</div>
+    <div style="display:flex;gap:8px">
+      <button class="btnp" style="background:#ef4444" onclick="deleteRide('${S.delId}')">Yes, delete</button>
+      <button class="btn" onclick="clearDel()">Cancel</button>
+    </div>
+  </div></div>`;}
+
+// ═══════════════════════════════════════════
+//  MAIN RENDER
+// ═══════════════════════════════════════════
+function render(){
+  const app=document.getElementById("app");if(!app)return;
+  if(S.user===null){app.innerHTML=renderLogin();return;}
+  if(!S.user||!S.profile){app.innerHTML=`<div class="splash">${LOGO(52)}<p>Loading…</p></div>`;return;}
+  const views={Dashboard:renderDashboard,"New Ride":renderNewRide,"Live Map":renderLiveMap,Drivers:renderDrivers,Rides:renderRides,Reports:renderReports,Settings:renderSettings,Audit:renderAudit};
+  app.innerHTML=`
+    ${renderHeader()}
+    <div class="main">${(views[S.tab]||renderDashboard)()}</div>
+    ${S.sel&&!S.delId?renderModal():""}
+    ${S.delId?renderDelConfirm():""}
+    <a class="wa-float" href="https://wa.me/2348000000000" target="_blank">💬</a>`;
+  if(S.tab==="Live Map")setTimeout(()=>initMap(),50);
+}
+
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
+auth.onAuthStateChanged(user=>{
+  S.user=user||null;
+  if(user){
+    loadProfile();
+    loadPricing();
+    loadDrivers();
+    loadRides();
+  }else{
+    S.profile=null;S.rides=[];S.drivers=[];
+    if(ridesUnsub){ridesUnsub();ridesUnsub=null;}
+    auditUnsub=null;
+  }
+  render();
+});
+
+render();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+</body>
+</html>
