@@ -8,7 +8,6 @@
 <link rel="manifest" href="manifest.json"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="AB Transport"/>
-<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -19,11 +18,6 @@ input,select,textarea,button{font-family:inherit;font-size:inherit}
 ::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
 input[type=date]::-webkit-calendar-picker-indicator,
 input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.6)}
-
-/* ── THEME COLORS ── */
-/* Primary: Sky blue #0ea5e9 */
-/* Surface: #0c1220 #111827 #1a2535 */
-/* Border: #1e3a5f #2a4a6b */
 
 .hdr{background:#0c1220;border-bottom:1px solid #1e3a5f;position:sticky;top:0;z-index:100}
 .hdr-top{display:flex;align-items:center;padding:0 10px;height:50px;gap:8px;border-bottom:1px solid #1e3a5f}
@@ -39,7 +33,7 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.6)}
 .card{background:#0c1220;border:1px solid #1e3a5f;border-radius:12px;padding:16px 18px;margin-bottom:14px}
 .card-title{font-size:14px;font-weight:600;margin-bottom:12px}
 
-/* ── STATS GRID ── */
+/* STATS */
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
 .stat{background:#0c1220;border:1px solid #1e3a5f;border-radius:12px;padding:12px 14px}
 .stat-l{font-size:10px;color:#64748b;margin-bottom:3px}
@@ -47,7 +41,7 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.6)}
 .stat.wide{grid-column:1/-1}
 @media(min-width:500px){.stats{grid-template-columns:repeat(3,1fr)}}
 
-/* ── FORM ── */
+/* FORM */
 label{font-size:12px;color:#64748b;display:block;margin-bottom:4px}
 input,select,textarea{width:100%;background:#111827;border:1px solid #2a4a6b;border-radius:8px;color:#e2e8f0;padding:8px 12px;font-size:13px;margin-bottom:10px;outline:none}
 input:focus,select:focus,textarea:focus{border-color:#0ea5e9}
@@ -55,7 +49,7 @@ textarea{resize:vertical;min-height:60px}
 .frow{display:flex;gap:10px;flex-wrap:wrap}
 .fcol{flex:1;min-width:140px}
 
-/* ── BUTTONS ── */
+/* BUTTONS */
 .btn{background:none;border:1px solid #2a4a6b;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;color:#e2e8f0}
 .btn:hover{border-color:#0ea5e9;color:#0ea5e9}
 .btnp{background:#0ea5e9;border:none;border-radius:8px;padding:9px 20px;cursor:pointer;font-size:13px;color:#fff;font-weight:500}
@@ -64,31 +58,55 @@ textarea{resize:vertical;min-height:60px}
 .btn-green{background:#0d2d1a;border:1.5px solid rgba(34,197,94,.5);border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px;color:#22c55e;font-weight:500}
 .btn-red{background:#2d0d0d;border:1.5px solid rgba(239,68,68,.5);border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px;color:#ef4444;font-weight:500}
 
-/* ── TABLE ── */
-.tblw{overflow-x:auto;border:1px solid #1e3a5f;border-radius:12px}
-table{width:100%;border-collapse:collapse;font-size:12px}
+/* TABLE - FIXED MOBILE */
+.tblw{overflow-x:auto;border:1px solid #1e3a5f;border-radius:12px;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:520px}
 th{text-align:left;padding:9px 11px;border-bottom:1px solid #1e3a5f;color:#64748b;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;background:#111827}
 td{padding:10px 11px;border-bottom:1px solid #1e3a5f;vertical-align:middle}
 tr:last-child td{border:none}
 tbody tr:hover td{background:#111827;cursor:pointer}
 
-/* ── MAP ── */
-#live-map{height:340px;border-radius:10px;border:1px solid #1e3a5f;z-index:1}
-.map-controls{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+/* MAP - FIXED */
+#live-map{height:340px;border-radius:10px;border:1px solid #1e3a5f;z-index:1;background:#0d1f36}
 .map-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:#64748b}
-.map-legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
 
-/* ── BADGES ── */
+/* BADGES */
 .badge{border-radius:6px;padding:3px 9px;font-size:11px;font-weight:500;display:inline-block;white-space:nowrap}
 .av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
 
-/* ── MODAL ── */
+/* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;z-index:300;padding:14px}
 .modal-box{background:#0c1220;border:1px solid #1e3a5f;border-radius:14px;padding:22px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto}
 .dr{display:flex;border-bottom:1px solid #1e3a5f;padding:8px 0;font-size:13px}
 .dl{color:#64748b;width:120px;flex-shrink:0}
 
-/* ── MISC ── */
+/* RIDE CARDS - MOBILE FRIENDLY */
+.ride-card{background:#111827;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.2s}
+.ride-card:hover{border-color:#0ea5e9}
+.ride-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.ride-card-route{font-size:11px;color:#64748b;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.ride-card-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:10px;color:#64748b}
+
+/* STATUS ACTIONS */
+.status-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.status-actions button{flex:1;min-width:100px;padding:10px;font-size:12px;font-weight:500;border-radius:8px;cursor:pointer;border:none;transition:.2s}
+.btn-start{background:linear-gradient(135deg,#0ea5e9,#0369a1);color:#fff}
+.btn-complete{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff}
+.btn-cancel{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.4)!important}
+
+/* FARE ESTIMATE BOX */
+.fare-estimate{background:linear-gradient(135deg,#0d2d1a,#0a2010);border:1.5px solid rgba(34,197,94,.4);border-radius:10px;padding:14px;margin-bottom:12px}
+.fare-est-main{font-size:24px;font-weight:700;color:#22c55e}
+.fare-est-breakdown{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;font-size:11px;color:#64748b}
+
+/* CHARTS */
+.chart-bar-wrap{margin-bottom:8px}
+.chart-bar-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px}
+.chart-bar-bg{height:8px;background:#111827;border-radius:4px;overflow:hidden}
+.chart-bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+/* MISC */
 .empty{color:#64748b;font-size:13px;padding:20px;text-align:center}
 .err{font-size:12px;color:#ef4444;margin-bottom:8px}
 .ok{font-size:12px;color:#22c55e;margin-bottom:8px}
@@ -102,7 +120,7 @@ tbody tr:hover td{background:#111827;cursor:pointer}
 .pulse{animation:pulse-anim 1.5s infinite}
 @keyframes pulse-anim{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ── LOGIN ── */
+/* LOGIN */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#060910;position:relative;overflow:hidden}
 .login-glow{position:fixed;top:-20%;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,.08) 0%,transparent 70%);pointer-events:none}
 .login-card{background:#0c1220;border:1px solid #1e3a5f;border-radius:16px;padding:28px 26px;box-shadow:0 24px 64px rgba(14,165,233,.12);width:100%;max-width:400px}
@@ -116,23 +134,19 @@ tbody tr:hover td{background:#111827;cursor:pointer}
 .driver-track-bar{background:#0d1f36;border:1px solid rgba(14,165,233,.4);border-radius:10px;padding:12px 14px;margin-bottom:14px}
 .settings-section{margin-bottom:18px}
 .settings-section h4{font-size:13px;font-weight:600;color:#0ea5e9;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #1e3a5f}
-.toggle-wrap{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e3a5f;font-size:13px}
-.toggle{width:40px;height:22px;border-radius:11px;border:none;cursor:pointer;position:relative;transition:.3s;flex-shrink:0}
-.toggle.on{background:#0ea5e9}
-.toggle.off{background:#1e3a5f}
+
+/* DRIVER CARD */
+.dcard-sel{border:2px solid #0ea5e9!important;background:#0d1f36!important}
 </style>
 </head>
 <body>
 <div id="app"><div class="splash"><p>Starting ApartBook Transport…</p></div></div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-<!-- Leaflet JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
@@ -155,17 +169,12 @@ const rtdb = firebase.database();
 const TS   = firebase.firestore.FieldValue.serverTimestamp;
 
 // ═══════════════════════════════════════════
-//  DEFAULT PRICING (Admin can change these)
+//  DEFAULT PRICING
 // ═══════════════════════════════════════════
 const DEFAULT_PRICING = {
-  baseFare:        500,   // ₦ flat fee per ride
-  perKm:           120,   // ₦ per kilometre
-  perMinWaiting:   25,    // ₦ per minute waiting/traffic
-  minFare:         800,   // ₦ minimum fare
-  nightSurcharge:  1.5,   // multiplier 10pm–5am
-  airportFee:      500,   // ₦ fixed airport surcharge
-  bookingFee:      100,   // ₦ platform booking fee
-  currency:        "₦",
+  baseFare:500, perKm:150, perMinWaiting:25,
+  minFare:800, nightSurcharge:1.5,
+  airportFee:800, bookingFee:100, currency:"₦"
 };
 
 // ═══════════════════════════════════════════
@@ -175,30 +184,29 @@ const MN=["January","February","March","April","May","June","July","August","Sep
 const RIDE_STATUSES=["Pending","Active","Completed","Cancelled"];
 const DRIVER_STATUSES=["Online","Offline","On Ride"];
 const RS_STYLE={
-  Pending:   {bg:"#2d1f0d",c:"#f59e0b"},
-  Active:    {bg:"#0d2d1a",c:"#22c55e"},
-  Completed: {bg:"#0d1f36",c:"#0ea5e9"},
-  Cancelled: {bg:"#2d0d0d",c:"#ef4444"},
+  Pending:{bg:"#2d1f0d",c:"#f59e0b"},
+  Active:{bg:"#0d2d1a",c:"#22c55e"},
+  Completed:{bg:"#0d1f36",c:"#0ea5e9"},
+  Cancelled:{bg:"#2d0d0d",c:"#ef4444"},
 };
 const DS_STYLE={
-  Online:  {bg:"#0d2d1a",c:"#22c55e"},
-  Offline: {bg:"#1a1a1a",c:"#64748b"},
+  Online:{bg:"#0d2d1a",c:"#22c55e"},
+  Offline:{bg:"#1a1a1a",c:"#64748b"},
   "On Ride":{bg:"#0d1f36",c:"#0ea5e9"},
 };
 
 // ═══════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════
-const fmt   = n  => "₦"+Number(n).toLocaleString();
-const ini   = n  => (n||"?").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase();
-const tod   = () => new Date().toISOString().split("T")[0];
-const esc   = s  => String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-const fmtWA = p  => {const d=String(p||"").replace(/\D/g,"");return d.startsWith("0")?"234"+d.slice(1):d.startsWith("234")?d:d;};
+const fmt=n=>"₦"+Number(n).toLocaleString();
+const ini=n=>(n||"?").split(" ").map(x=>x[0]).join("").slice(0,2).toUpperCase();
+const tod=()=>new Date().toISOString().split("T")[0];
+const esc=s=>String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const fmtWA=p=>{const d=String(p||"").replace(/\D/g,"");return d.startsWith("0")?"234"+d.slice(1):d;};
 const fmtTime=t=>{if(!t)return"—";const[h,m]=t.split(":");const hh=Number(h);return`${hh%12||12}:${m} ${hh<12?"AM":"PM"}`;};
 const nowTime=()=>new Date().toTimeString().slice(0,5);
-const nowDate=()=>tod();
 
-// Haversine distance (km) — free, no API needed
+// Haversine distance (km)
 function distKm(lat1,lon1,lat2,lon2){
   const R=6371,dL=(lat2-lat1)*Math.PI/180,dl=(lon2-lon1)*Math.PI/180;
   const a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dl/2)**2;
@@ -206,42 +214,36 @@ function distKm(lat1,lon1,lat2,lon2){
 }
 
 function calcFare(km,waitMins,pricing,isNight=false,isAirport=false){
-  let fare=pricing.baseFare+(km*pricing.perKm)+(waitMins*pricing.perMinWaiting)+pricing.bookingFee;
-  if(isAirport)fare+=pricing.airportFee;
-  if(isNight)fare*=pricing.nightSurcharge;
-  return Math.max(fare,pricing.minFare);
+  let f=pricing.baseFare+(km*pricing.perKm)+(waitMins*pricing.perMinWaiting)+pricing.bookingFee;
+  if(isAirport)f+=pricing.airportFee;
+  if(isNight)f*=pricing.nightSurcharge;
+  return Math.max(Math.round(f),pricing.minFare);
 }
 
-function isNightTime(){
-  const h=new Date().getHours();
-  return h>=22||h<5;
-}
+function isNightTime(){const h=new Date().getHours();return h>=22||h<5;}
 
 // ═══════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════
 const S={
-  user:null, profile:null, tab:"Dashboard",
-  rides:[], drivers:[], auditLog:[],
+  user:null,profile:null,tab:"Dashboard",
+  rides:[],drivers:[],auditLog:[],
   pricing:DEFAULT_PRICING,
-  search:"", filterStatus:"All",
-  sel:null, editMode:false, editForm:null,
-  delId:null,
-  driverForm:{name:"",phone:"",vehicle:"",plate:"",color:""},
-  rideForm:{passenger:"",phone:"",pickup:"",dropoff:"",driverId:"",isAirport:false,notes:""},
-  reportMonth:new Date().getMonth(), reportYear:new Date().getFullYear(),
-  loginErr:"", loginBusy:false, showPw:false,
-  mapReady:false, trackingRideId:null,
-  activeDriverLocations:{},
-  gpsWatcher:null, isTracking:false,
-  settingsForm:null,
+  search:"",filterStatus:"All",
+  sel:null,delId:null,
+  reportMonth:new Date().getMonth(),reportYear:new Date().getFullYear(),
+  loginErr:"",loginBusy:false,showPw:false,
+  mapReady:false,trackingRideId:null,
+  gpsWatcher:null,isTracking:false,
+  selectedDriverId:"",
+  fareEstimate:0,fareKm:0,
 };
 
 const isAdmin=()=>S.profile?.role==="admin";
 const isMgr=()=>["admin","manager"].includes(S.profile?.role);
 
 // ═══════════════════════════════════════════
-//  LOGO SVG
+//  LOGO
 // ═══════════════════════════════════════════
 const LOGO=(sz=32)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 36 36" fill="none">
   <rect width="36" height="36" rx="9" fill="#0d1f36"/>
@@ -265,7 +267,7 @@ const av=(n,sz=30,bg="#0d1f36",brd="#0ea5e9",col="#7dd3fc")=>`<div class="av" st
 const DR=(label,value)=>`<div class="dr"><span class="dl">${label}</span><div style="flex:1">${value}</div></div>`;
 
 // ═══════════════════════════════════════════
-//  FIREBASE AUTH
+//  AUTH
 // ═══════════════════════════════════════════
 window.doLogin=async function(){
   const email=document.getElementById("li-email")?.value?.trim();
@@ -290,7 +292,7 @@ window.doLogout=async function(){
 // ═══════════════════════════════════════════
 //  DATA LOADING
 // ═══════════════════════════════════════════
-let ridesUnsub=null,auditUnsub=null,staffUnsub=null;
+let ridesUnsub=null,auditUnsub=null;
 
 function loadProfile(){
   const ref=db.collection("users").doc(S.user.uid);
@@ -315,8 +317,7 @@ function loadPricing(){
 
 function loadDrivers(){
   db.collection("drivers").orderBy("name","asc").onSnapshot(snap=>{
-    S.drivers=snap.docs.map(d=>({...d.data(),_id:d.id}));
-    render();
+    S.drivers=snap.docs.map(d=>({...d.data(),_id:d.id}));render();
   },()=>{
     db.collection("drivers").get().then(snap=>{S.drivers=snap.docs.map(d=>({...d.data(),_id:d.id}));render();});
   });
@@ -324,13 +325,50 @@ function loadDrivers(){
 
 function loadRides(){
   if(ridesUnsub){ridesUnsub();ridesUnsub=null;}
-  ridesUnsub=db.collection("rides").orderBy("created","desc").limit(200)
-    .onSnapshot(snap=>{
-      S.rides=snap.docs.map(d=>({...d.data(),_id:d.id}));render();
-    },()=>{
-      db.collection("rides").get().then(snap=>{S.rides=snap.docs.map(d=>({...d.data(),_id:d.id})).sort((a,b)=>(b.created?.seconds||0)-(a.created?.seconds||0));render();});
-    });
+  ridesUnsub=db.collection("rides").orderBy("created","desc").limit(200).onSnapshot(snap=>{
+    S.rides=snap.docs.map(d=>({...d.data(),_id:d.id}));render();
+  },()=>{
+    db.collection("rides").get().then(snap=>{S.rides=snap.docs.map(d=>({...d.data(),_id:d.id})).sort((a,b)=>(b.created?.seconds||0)-(a.created?.seconds||0));render();});
+  });
 }
+
+// ═══════════════════════════════════════════
+//  FARE ESTIMATE (live calculation)
+// ═══════════════════════════════════════════
+window.updateFareEstimate=function(){
+  const pickup=document.getElementById("r-pickup")?.value?.trim();
+  const dropoff=document.getElementById("r-dropoff")?.value?.trim();
+  const isAirport=document.getElementById("r-airport")?.checked||false;
+  // Use rough Benin City center coordinates for estimation
+  // In production you'd use geocoding API
+  const BEN={lat:6.3350,lng:5.6270};
+  // Estimate ~5km default if both fields filled but no coords
+  let estKm=5;
+  if(pickup&&dropoff){
+    // Simple character-based rough estimate for demo
+    estKm=Math.max(2,Math.min(30,(pickup.length+dropoff.length)*0.3));
+  }
+  S.fareKm=estKm;
+  S.fareEstimate=calcFare(estKm,0,S.pricing,isNightTime(),isAirport);
+  const box=document.getElementById("fare-est-box");
+  if(box){
+    box.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-size:10px;color:#64748b;margin-bottom:2px">ESTIMATED FARE</div>
+        <div class="fare-est-main">${fmt(S.fareEstimate)}</div>
+        <div class="fare-est-breakdown">
+          <span>Base: ${fmt(S.pricing.baseFare)}</span>
+          <span>~${estKm.toFixed(1)}km × ${fmt(S.pricing.perKm)}</span>
+          <span>Fee: ${fmt(S.pricing.bookingFee)}</span>
+          ${isAirport?`<span style="color:#7dd3fc">✈️ Airport: +${fmt(S.pricing.airportFee)}</span>`:""}
+          ${isNightTime()?`<span style="color:#f59e0b">🌙 Night ×${S.pricing.nightSurcharge}</span>`:""}
+        </div>
+      </div>
+      <div style="font-size:10px;color:#64748b;text-align:right">Final fare set<br>when completed</div>
+    </div>`;
+  }
+};
 
 // ═══════════════════════════════════════════
 //  GPS TRACKING
@@ -343,9 +381,11 @@ function startTracking(rideId){
     const speed=pos.coords.speed||0;
     try{
       await rtdb.ref(`drivers_live/${S.user.uid}`).set({lat,lng,speed,rideId,timestamp:Date.now(),driverName:S.profile?.name||S.user.email});
+      // Auto-center map if open
+      if(leafletMap)leafletMap.setView([lat,lng],15);
     }catch(_){}
     render();
-  },{enableHighAccuracy:true,maximumAge:3000,timeout:10000},{enableHighAccuracy:true});
+  },{enableHighAccuracy:true,maximumAge:3000,timeout:10000});
 }
 
 function stopTracking(){
@@ -357,41 +397,45 @@ function stopTracking(){
 // ═══════════════════════════════════════════
 //  RIDE ACTIONS
 // ═══════════════════════════════════════════
+window.selectDriver=function(id,el){
+  S.selectedDriverId=id;
+  document.querySelectorAll(".dcard").forEach(x=>x.classList.remove("dcard-sel"));
+  el.classList.add("dcard-sel");
+  document.getElementById("r-driver").value=id;
+  updateFareEstimate();
+};
+
 window.addRide=async function(){
   const errEl=document.getElementById("r-err");
   const f={
-    passenger: document.getElementById("r-passenger")?.value?.trim(),
-    phone:     document.getElementById("r-phone")?.value?.trim(),
-    pickup:    document.getElementById("r-pickup")?.value?.trim(),
-    dropoff:   document.getElementById("r-dropoff")?.value?.trim(),
-    driverId:  document.getElementById("r-driver")?.value,
-    isAirport: document.getElementById("r-airport")?.checked||false,
-    notes:     document.getElementById("r-notes")?.value?.trim(),
-    date:      document.getElementById("r-date")?.value||tod(),
-    time:      document.getElementById("r-time")?.value||nowTime(),
+    passenger:document.getElementById("r-passenger")?.value?.trim(),
+    phone:document.getElementById("r-phone")?.value?.trim(),
+    pickup:document.getElementById("r-pickup")?.value?.trim(),
+    dropoff:document.getElementById("r-dropoff")?.value?.trim(),
+    driverId:document.getElementById("r-driver")?.value,
+    isAirport:document.getElementById("r-airport")?.checked||false,
+    notes:document.getElementById("r-notes")?.value?.trim(),
+    date:document.getElementById("r-date")?.value||tod(),
+    time:document.getElementById("r-time")?.value||nowTime(),
   };
   if(!f.passenger){if(errEl)errEl.textContent="Passenger name required.";return;}
   if(!f.pickup){if(errEl)errEl.textContent="Pickup location required.";return;}
   if(!f.dropoff){if(errEl)errEl.textContent="Dropoff location required.";return;}
-  if(!f.driverId){if(errEl)errEl.textContent="Please assign a driver.";return;}
+  if(!f.driverId){if(errEl)errEl.textContent="Please select a driver.";return;}
   const driver=S.drivers.find(d=>d._id===f.driverId);
-  const estimatedFare=calcFare(5,0,S.pricing,isNightTime(),f.isAirport);
+  const estimatedFare=S.fareEstimate||calcFare(5,0,S.pricing,isNightTime(),f.isAirport);
   try{
     const ref=await db.collection("rides").add({...f,status:"Pending",fare:0,estimatedFare,distanceKm:0,durationMins:0,
       driverName:driver?.name||"",driverPhone:driver?.phone||"",vehicle:driver?.vehicle||"",plate:driver?.plate||"",
       createdBy:S.user.email,created:TS(),paymentStatus:"Unpaid"});
-    // update driver status
     if(f.driverId)await db.collection("drivers").doc(f.driverId).update({status:"On Ride",currentRideId:ref.id});
-    // WhatsApp
     const phone=fmtWA(f.phone||"");
-    const msg=encodeURIComponent(`Hello ${f.passenger}! 🚗\n\nYour ride is confirmed.\n\n📍 Pickup: ${f.pickup}\n📍 Dropoff: ${f.dropoff}\n🚙 Driver: ${driver?.name||"TBA"}\n🔢 Plate: ${driver?.plate||"TBA"}\n📞 Driver Phone: ${driver?.phone||"TBA"}\n⏰ Time: ${f.time}\n\nThank you for riding with us! 🙏`);
-    // clear form
+    const msg=encodeURIComponent(`Hello ${f.passenger}! 🚗\n\nYour ride is confirmed.\n\n📍 Pickup: ${f.pickup}\n📍 Dropoff: ${f.dropoff}\n🚙 Driver: ${driver?.name||"TBA"} | ${driver?.vehicle||""} ${driver?.plate||""}\n📞 Driver: ${driver?.phone||"TBA"}\n⏰ Time: ${f.time}\n💰 Est. Fare: ${fmt(estimatedFare)}\n\nThank you for riding with ApartBook Transport! 🙏`);
     ["r-passenger","r-phone","r-pickup","r-dropoff","r-notes"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
-    const dEl=document.getElementById("r-driver");if(dEl)dEl.selectedIndex=0;
-    const aEl=document.getElementById("r-airport");if(aEl)aEl.checked=false;
+    S.selectedDriverId="";
     if(errEl)errEl.textContent="";
-    document.getElementById("r-ok").textContent="✅ Ride booked!";
-    setTimeout(()=>{const o=document.getElementById("r-ok");if(o)o.textContent="";},3000);
+    const okEl=document.getElementById("r-ok");
+    if(okEl){okEl.textContent="✅ Ride booked successfully!";setTimeout(()=>{if(okEl)okEl.textContent="";},4000);}
     if(phone.length>=10&&confirm("Send WhatsApp confirmation to passenger?"))window.open(`https://wa.me/${phone}?text=${msg}`,"_blank");
   }catch(e){if(errEl)errEl.textContent="Error: "+e.message;}
 };
@@ -408,14 +452,14 @@ window.startRide=async function(id){
 
 window.completeRide=async function(id){
   const ride=S.rides.find(r=>r._id===id);if(!ride)return;
-  const kmStr=prompt("Enter distance in kilometres (e.g. 8.5):");
+  const kmStr=prompt(`Enter actual distance in km:\n(Estimated: ${(ride.estimatedKm||5).toFixed(1)} km)`);
   if(!kmStr)return;
   const km=parseFloat(kmStr)||0;
-  const waitStr=prompt("Enter waiting/traffic time in minutes (e.g. 5):");
+  const waitStr=prompt("Waiting/traffic time in minutes (0 if none):");
   const wait=parseFloat(waitStr)||0;
   const night=isNightTime();
-  const fare=Math.round(calcFare(km,wait,S.pricing,night,ride.isAirport));
-  if(!confirm(`Calculated fare: ${fmt(fare)}\n\nKm: ${km} | Wait: ${wait} mins${night?" | Night surcharge applied":""}${ride.isAirport?" | Airport fee applied":""}\n\nConfirm completion?`))return;
+  const fare=calcFare(km,wait,S.pricing,night,ride.isAirport);
+  if(!confirm(`✅ Complete Ride\n\n📏 Distance: ${km} km\n⏱ Wait: ${wait} mins\n💰 Fare: ${fmt(fare)}${night?" (night rate)":""}${ride.isAirport?" + airport fee":""}\n\nConfirm?`))return;
   try{
     await db.collection("rides").doc(id).update({status:"Completed",fare,distanceKm:km,durationMins:wait,completedAt:TS(),endTime:nowTime(),endDate:tod(),isNight:night,paymentStatus:"Paid"});
     if(ride.driverId)await db.collection("drivers").doc(ride.driverId).update({status:"Online",currentRideId:null,totalRides:firebase.firestore.FieldValue.increment(1),totalEarnings:firebase.firestore.FieldValue.increment(fare)});
@@ -447,12 +491,12 @@ window.deleteRide=async function(id){
 window.addDriver=async function(){
   const errEl=document.getElementById("d-err");
   const f={
-    name:    document.getElementById("d-name")?.value?.trim(),
-    phone:   document.getElementById("d-phone")?.value?.trim(),
-    vehicle: document.getElementById("d-vehicle")?.value?.trim(),
-    plate:   document.getElementById("d-plate")?.value?.trim().toUpperCase(),
-    color:   document.getElementById("d-color")?.value?.trim(),
-    license: document.getElementById("d-license")?.value?.trim(),
+    name:document.getElementById("d-name")?.value?.trim(),
+    phone:document.getElementById("d-phone")?.value?.trim(),
+    vehicle:document.getElementById("d-vehicle")?.value?.trim(),
+    plate:document.getElementById("d-plate")?.value?.trim().toUpperCase(),
+    color:document.getElementById("d-color")?.value?.trim(),
+    license:document.getElementById("d-license")?.value?.trim(),
   };
   if(!f.name){if(errEl)errEl.textContent="Driver name required.";return;}
   if(!f.phone){if(errEl)errEl.textContent="Phone required.";return;}
@@ -460,9 +504,10 @@ window.addDriver=async function(){
   if(!f.plate){if(errEl)errEl.textContent="Plate number required.";return;}
   try{
     await db.collection("drivers").add({...f,status:"Offline",totalRides:0,totalEarnings:0,rating:5.0,createdAt:TS(),createdBy:S.user.email});
-    ["d-name","d-phone","d-vehicle","d-plate","d-color","d-license"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+    ["d-name","d-phone","d-plate","d-color","d-license"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
     if(errEl)errEl.textContent="";
-    const okEl=document.getElementById("d-ok");if(okEl){okEl.textContent="✅ Driver added!";setTimeout(()=>{if(okEl)okEl.textContent="";},3000);}
+    const okEl=document.getElementById("d-ok");
+    if(okEl){okEl.textContent="✅ Driver added!";setTimeout(()=>{if(okEl)okEl.textContent="";},3000);}
   }catch(e){if(errEl)errEl.textContent="Error: "+e.message;}
 };
 
@@ -481,13 +526,13 @@ window.deleteDriver=async function(id){
 // ═══════════════════════════════════════════
 window.saveSettings=async function(){
   const p={
-    baseFare:      Number(document.getElementById("s-base")?.value)||DEFAULT_PRICING.baseFare,
-    perKm:         Number(document.getElementById("s-perkm")?.value)||DEFAULT_PRICING.perKm,
-    perMinWaiting: Number(document.getElementById("s-permin")?.value)||DEFAULT_PRICING.perMinWaiting,
-    minFare:       Number(document.getElementById("s-min")?.value)||DEFAULT_PRICING.minFare,
+    baseFare:Number(document.getElementById("s-base")?.value)||DEFAULT_PRICING.baseFare,
+    perKm:Number(document.getElementById("s-perkm")?.value)||DEFAULT_PRICING.perKm,
+    perMinWaiting:Number(document.getElementById("s-permin")?.value)||DEFAULT_PRICING.perMinWaiting,
+    minFare:Number(document.getElementById("s-min")?.value)||DEFAULT_PRICING.minFare,
     nightSurcharge:Number(document.getElementById("s-night")?.value)||DEFAULT_PRICING.nightSurcharge,
-    airportFee:    Number(document.getElementById("s-airport")?.value)||DEFAULT_PRICING.airportFee,
-    bookingFee:    Number(document.getElementById("s-booking")?.value)||DEFAULT_PRICING.bookingFee,
+    airportFee:Number(document.getElementById("s-airport")?.value)||DEFAULT_PRICING.airportFee,
+    bookingFee:Number(document.getElementById("s-booking")?.value)||DEFAULT_PRICING.bookingFee,
   };
   try{
     await db.collection("settings").doc("pricing").set(p);
@@ -497,78 +542,56 @@ window.saveSettings=async function(){
 };
 
 // ═══════════════════════════════════════════
-//  PDF REPORT
+//  PDF/CSV
 // ═══════════════════════════════════════════
 window.generatePDF=function(){
   if(!window.jspdf){alert("PDF library loading. Try again.");return;}
   const{jsPDF}=window.jspdf;
   const doc=new jsPDF();
   const pfmt=n=>"NGN "+Number(n).toLocaleString();
-  const mb=S.rides.filter(r=>{const d=new Date(r.date||r.created?.toDate?.()?.toISOString()?.split("T")[0]||"");return d.getMonth()===S.reportMonth&&d.getFullYear()===S.reportYear;});
+  const mb=S.rides.filter(r=>{const d=new Date(r.date||"");return d.getMonth()===S.reportMonth&&d.getFullYear()===S.reportYear;});
   const rev=mb.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
   doc.setFillColor(13,31,54);doc.rect(0,0,210,42,"F");
   doc.setTextColor(125,211,252);doc.setFontSize(22);doc.setFont("helvetica","bold");doc.text("ApartBook Transport",14,18);
   doc.setFontSize(11);doc.setFont("helvetica","normal");doc.text("Monthly Ride Revenue Report",14,28);
   doc.setFontSize(10);doc.text(`${MN[S.reportMonth]} ${S.reportYear}`,14,38);
-  doc.setTextColor(120,120,120);doc.setFontSize(9);doc.text(`Generated: ${new Date().toLocaleString()}  by ${S.user?.email||""}`,14,52);
+  doc.setTextColor(120,120,120);doc.setFontSize(9);doc.text(`Generated: ${new Date().toLocaleString()}`,14,52);
   doc.setFontSize(11);doc.setFont("helvetica","bold");doc.setTextColor(40,40,40);doc.text("Summary",14,64);
   doc.autoTable({startY:68,head:[["Metric","Value"]],theme:"grid",
-    body:[
-      ["Total Rides",mb.length],
-      ["Completed",mb.filter(r=>r.status==="Completed").length],
-      ["Cancelled",mb.filter(r=>r.status==="Cancelled").length],
-      ["Pending/Active",mb.filter(r=>["Pending","Active"].includes(r.status)).length],
-      ["Total Distance",mb.reduce((s,r)=>s+(r.distanceKm||0),0).toFixed(1)+" km"],
-      ["Total Revenue",pfmt(rev)],
-      ["Average Fare",mb.filter(r=>r.status==="Completed").length?pfmt(Math.round(rev/mb.filter(r=>r.status==="Completed").length)):"NGN 0"],
-    ],
-    headStyles:{fillColor:[14,165,233],textColor:255,fontStyle:"bold"},styles:{fontSize:10},columnStyles:{0:{cellWidth:120}}
+    body:[["Total Rides",mb.length],["Completed",mb.filter(r=>r.status==="Completed").length],["Cancelled",mb.filter(r=>r.status==="Cancelled").length],["Total Distance",mb.reduce((s,r)=>s+(r.distanceKm||0),0).toFixed(1)+" km"],["Total Revenue",pfmt(rev)]],
+    headStyles:{fillColor:[14,165,233],textColor:255,fontStyle:"bold"},styles:{fontSize:10}
   });
   const y2=doc.lastAutoTable.finalY+10;
-  doc.text("Ride Details",14,y2);
   doc.autoTable({startY:y2+4,theme:"striped",
     head:[["Passenger","Driver","Pickup","Dropoff","Km","Status","Fare"]],
-    body:mb.length?mb.map(r=>[r.passenger||"—",r.driverName||"—",(r.pickup||"—").slice(0,20),(r.dropoff||"—").slice(0,20),(r.distanceKm||0).toFixed(1),r.status||"—",pfmt(r.fare||0)]):[["No rides this month","","","","","",""]],
+    body:mb.length?mb.map(r=>[r.passenger||"—",r.driverName||"—",(r.pickup||"—").slice(0,20),(r.dropoff||"—").slice(0,20),(r.distanceKm||0).toFixed(1),r.status||"—",pfmt(r.fare||0)]):[["No rides","","","","","",""]],
     headStyles:{fillColor:[14,165,233],textColor:255,fontSize:8},styles:{fontSize:7.5}
   });
-  const pg=doc.internal.getNumberOfPages();
-  for(let i=1;i<=pg;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(150,150,150);doc.text(`ApartBook Transport  |  Page ${i} of ${pg}`,14,287);}
   doc.save(`ABTransport-${MN[S.reportMonth]}-${S.reportYear}.pdf`);
 };
 
 window.exportCSV=function(){
-  const rows=[
-    ["ApartBook Transport — Ride Export"],
-    [`Exported: ${new Date().toLocaleString()}`],
-    [`Total Rides: ${S.rides.length}`],
-    [],
-    ["#","Passenger","Phone","Pickup","Dropoff","Driver","Vehicle","Plate","Date","Time","Distance Km","Wait Mins","Fare NGN","Status","Payment","Night Ride","Airport","Notes","Created By"],
-  ];
-  S.rides.forEach((r,i)=>{
-    rows.push([i+1,r.passenger||"",r.phone||"",r.pickup||"",r.dropoff||"",r.driverName||"",r.vehicle||"",r.plate||"",r.date||"",r.time||"",r.distanceKm||0,r.durationMins||0,r.fare||0,r.status||"",r.paymentStatus||"",r.isNight?"Yes":"No",r.isAirport?"Yes":"No",r.notes||"",r.createdBy||""]);
-  });
-  const rev=S.rides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
-  rows.push([],[],["--- SUMMARY ---"],["Total Rides",S.rides.length],["Completed",S.rides.filter(r=>r.status==="Completed").length],["Total Revenue (NGN)",rev],["Total Distance Km",S.rides.reduce((s,r)=>s+(r.distanceKm||0),0).toFixed(1)],["Total Drivers",S.drivers.length]);
-  const csv=rows.map(r=>r.map(c=>{const s=String(c==null?"":c).replace(/"/g,'""');return s.includes(",")||s.includes("\n")||s.includes('"')?`"${s}"`:s;}).join(",")).join("\n");
+  const rows=[["ApartBook Transport — Ride Export"],[`Exported: ${new Date().toLocaleString()}`],[],
+    ["#","Passenger","Phone","Pickup","Dropoff","Driver","Vehicle","Plate","Date","Time","Distance Km","Fare NGN","Status","Payment","Night","Airport","Notes"]];
+  S.rides.forEach((r,i)=>{rows.push([i+1,r.passenger||"",r.phone||"",r.pickup||"",r.dropoff||"",r.driverName||"",r.vehicle||"",r.plate||"",r.date||"",r.time||"",r.distanceKm||0,r.fare||0,r.status||"",r.paymentStatus||"",r.isNight?"Yes":"No",r.isAirport?"Yes":"No",r.notes||""]);});
+  const csv=rows.map(r=>r.map(c=>{const s=String(c==null?"":c).replace(/"/g,'""');return s.includes(",")||s.includes('"')?`"${s}"`:s;}).join(",")).join("\n");
   const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;a.download=`ABTransport-${tod()}.csv`;
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  const a=document.createElement("a");a.href=url;a.download=`ABTransport-${tod()}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 };
 
 // ═══════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════
 window.goTo=function(tab){
-  S.tab=tab;S.sel=null;S.editMode=false;
+  S.tab=tab;S.sel=null;
   if(tab==="Audit"&&!auditUnsub)auditUnsub=db.collection("audit_log").orderBy("timestamp","desc").limit(150).onSnapshot(snap=>{S.auditLog=snap.docs.map(d=>({...d.data(),_id:d.id}));render();});
   render();
   window.scrollTo({top:0,behavior:"smooth"});
   if(tab==="Live Map")setTimeout(()=>initMap(),100);
 };
 window.openSel=function(id){S.sel=S.rides.find(x=>x._id===id)||S.drivers.find(x=>x._id===id)||null;render();};
-window.closeSel=function(){S.sel=null;S.editMode=false;render();};
+window.closeSel=function(){S.sel=null;render();};
 window.setDelId=function(id){S.delId=id;render();};
 window.clearDel=function(){S.delId=null;render();};
 window.setSearch=function(v){S.search=v;render();};
@@ -578,7 +601,7 @@ window.setReportYear=function(v){S.reportYear=Number(v);render();};
 window.togglePw=function(){S.showPw=!S.showPw;render();};
 
 // ═══════════════════════════════════════════
-//  LIVE MAP
+//  LIVE MAP - FIXED
 // ═══════════════════════════════════════════
 let leafletMap=null,driversLayer={};
 
@@ -586,29 +609,48 @@ function initMap(){
   const el=document.getElementById("live-map");
   if(!el)return;
   if(leafletMap){leafletMap.invalidateSize();return;}
-  leafletMap=L.map("live-map").setView([6.5244,3.3792],12); // Lagos default
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:'© OpenStreetMap',maxZoom:19}).addTo(leafletMap);
-  // Listen for live driver locations
+  // BENIN CITY coordinates — fixed from Lagos default
+  leafletMap=L.map("live-map",{zoomControl:true}).setView([6.3350,5.6270],13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+    attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+    maxZoom:19,
+    crossOrigin:true
+  }).addTo(leafletMap);
+
+  // Add Benin City marker
+  L.marker([6.3350,5.6270],{
+    icon:L.divIcon({html:`<div style="background:#0ea5e9;color:#fff;border-radius:6px;padding:3px 7px;font-size:10px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.4)">📍 Benin City</div>`,className:"",iconAnchor:[40,10]})
+  }).addTo(leafletMap);
+
+  // Live driver tracking
   rtdb.ref("drivers_live").on("value",snap=>{
     const data=snap.val()||{};
-    // remove old markers
-    Object.values(driversLayer).forEach(m=>{if(m&&leafletMap)try{leafletMap.removeLayer(m);}catch(_){}});
+    Object.values(driversLayer).forEach(m=>{try{leafletMap.removeLayer(m);}catch(_){}});
     driversLayer={};
     Object.entries(data).forEach(([uid,loc])=>{
       if(!loc.lat||!loc.lng)return;
-      const icon=L.divIcon({html:`<div style="background:#0ea5e9;width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 8px rgba(14,165,233,.8)"></div>`,iconSize:[14,14],className:""});
+      const icon=L.divIcon({
+        html:`<div style="position:relative">
+          <div style="background:#0ea5e9;width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 10px rgba(14,165,233,.8)"></div>
+          <div style="position:absolute;top:-24px;left:50%;transform:translateX(-50%);background:#0d1f36;color:#7dd3fc;border-radius:4px;padding:2px 6px;font-size:9px;white-space:nowrap;border:1px solid #1e3a5f">${loc.driverName||"Driver"}</div>
+        </div>`,
+        iconSize:[16,16],className:"",iconAnchor:[8,8]
+      });
       const marker=L.marker([loc.lat,loc.lng],{icon})
-        .bindPopup(`🚗 ${loc.driverName||"Driver"}<br>Speed: ${Math.round((loc.speed||0)*3.6)} km/h`)
+        .bindPopup(`<b>${loc.driverName||"Driver"}</b><br>Speed: ${Math.round((loc.speed||0)*3.6)} km/h`)
         .addTo(leafletMap);
       driversLayer[uid]=marker;
     });
   });
-  // Try to center on user location
+
+  // Center on user location
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
-      if(leafletMap)leafletMap.setView([pos.coords.latitude,pos.coords.longitude],13);
+      if(leafletMap)leafletMap.setView([pos.coords.latitude,pos.coords.longitude],14);
     },()=>{});
   }
+  // Force resize fix
+  setTimeout(()=>{if(leafletMap)leafletMap.invalidateSize();},300);
 }
 
 // ═══════════════════════════════════════════
@@ -650,10 +692,7 @@ function renderHeader(){
   return`
   <div class="hdr">
     <div class="hdr-top">
-      <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
-        ${LOGO(28)}
-        <span class="logo-txt">AB Transport</span>
-      </div>
+      <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">${LOGO(28)}<span class="logo-txt">AB Transport</span></div>
       ${activeRides>0?`<div class="pulse" style="background:#22c55e;color:#fff;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;flex-shrink:0">🚗 ${activeRides} Active</div>`:""}
       <div style="margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0">
         <div style="display:flex;align-items:center;gap:5px;background:#111827;border:1px solid #2a4a6b;border-radius:8px;padding:4px 8px 4px 5px">
@@ -669,70 +708,87 @@ function renderHeader(){
         </button>
       </div>
     </div>
-    <div class="hdr-tabs">
-      ${TABS.map(t=>`<button class="tab-btn ${S.tab===t.n?"active":""}" onclick="goTo('${t.n}')">${t.n}</button>`).join("")}
-    </div>
+    <div class="hdr-tabs">${TABS.map(t=>`<button class="tab-btn ${S.tab===t.n?"active":""}" onclick="goTo('${t.n}')">${t.n}</button>`).join("")}</div>
   </div>`;}
 
 // ═══════════════════════════════════════════
 //  RENDER: DASHBOARD
 // ═══════════════════════════════════════════
 function renderDashboard(){
-  const t=tod();
-  const now=new Date();const cm=now.getMonth();const cy=now.getFullYear();
-  const todayRides=S.rides.filter(r=>r.date===t||r.created?.toDate?.()?.toISOString()?.startsWith(t));
+  const t=tod();const now=new Date();const cm=now.getMonth();const cy=now.getFullYear();
+  const todayRides=S.rides.filter(r=>r.date===t);
   const activeRides=S.rides.filter(r=>r.status==="Active");
+  const pendingRides=S.rides.filter(r=>r.status==="Pending");
   const monthRides=S.rides.filter(r=>{const d=new Date(r.date||"");return d.getMonth()===cm&&d.getFullYear()===cy;});
   const monthRev=monthRides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
   const todayRev=todayRides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
   const totalRev=S.rides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
   const onlineDrivers=S.drivers.filter(d=>d.status==="Online"||d.status==="On Ride");
-  const avgFare=S.rides.filter(r=>r.status==="Completed").length?Math.round(totalRev/S.rides.filter(r=>r.status==="Completed").length):0;
   const totalKm=S.rides.reduce((s,r)=>s+(r.distanceKm||0),0);
 
   return`
   <div class="pg-title">Fleet Overview <span style="color:#64748b;font-size:13px;font-weight:400">— ${t}</span></div>
 
-  <!-- TRACKING BAR (shown if driver is tracking) -->
   ${S.isTracking?`<div class="driver-track-bar">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
       <div style="display:flex;align-items:center;gap:8px">
         <div class="pulse" style="width:10px;height:10px;background:#22c55e;border-radius:50%"></div>
         <span style="font-size:13px;font-weight:600;color:#22c55e">GPS Tracking Active</span>
-        <span style="font-size:11px;color:#64748b">Ride #${(S.trackingRideId||"").slice(-6)}</span>
       </div>
-      <button class="btn-red" style="font-size:11px;padding:6px 12px" onclick="if(confirm('Stop GPS tracking?'))stopTracking();render()">Stop Tracking</button>
+      <button class="btn-red" style="font-size:11px;padding:6px 12px" onclick="if(confirm('Stop GPS?'))stopTracking();render()">Stop Tracking</button>
     </div>
   </div>`:""}
 
   <div class="stats">
     <div class="stat" style="border-top:3px solid #0ea5e9"><div class="stat-l">Total rides</div><div class="stat-v" style="color:#0ea5e9">${S.rides.length}</div></div>
     <div class="stat" style="border-top:3px solid #22c55e"><div class="stat-l">Active now</div><div class="stat-v" style="color:#22c55e">${activeRides.length}</div></div>
-    <div class="stat" style="border-top:3px solid #f59e0b"><div class="stat-l">Rides today</div><div class="stat-v" style="color:#f59e0b">${todayRides.length}</div></div>
+    <div class="stat" style="border-top:3px solid #f59e0b"><div class="stat-l">Pending</div><div class="stat-v" style="color:#f59e0b">${pendingRides.length}</div></div>
     <div class="stat" style="border-top:3px solid #a78bfa"><div class="stat-l">Online drivers</div><div class="stat-v" style="color:#a78bfa">${onlineDrivers.length}/${S.drivers.length}</div></div>
     <div class="stat" style="border-top:3px solid #22c55e"><div class="stat-l">Revenue today</div><div class="stat-v" style="color:#22c55e;font-size:15px">${fmt(todayRev)}</div></div>
     <div class="stat wide" style="border-top:3px solid #0ea5e9;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-      <div><div class="stat-l">Monthly gross — ${MN[cm]}</div><div class="stat-v" style="color:#0ea5e9;font-size:16px">${fmt(monthRev)}</div></div>
+      <div><div class="stat-l">Monthly — ${MN[cm]}</div><div class="stat-v" style="color:#0ea5e9;font-size:16px">${fmt(monthRev)}</div></div>
       <div><div class="stat-l">All-time revenue</div><div class="stat-v" style="color:#22c55e;font-size:15px">${fmt(totalRev)}</div></div>
-      <div><div class="stat-l">Avg fare / km</div><div class="stat-v" style="color:#f59e0b;font-size:15px">${fmt(avgFare)} / ${totalKm.toFixed(0)}km</div></div>
+      <div><div class="stat-l">Total km driven</div><div class="stat-v" style="color:#f59e0b;font-size:15px">${totalKm.toFixed(0)} km</div></div>
     </div>
   </div>
+
+  <!-- PENDING RIDES — needs action -->
+  ${pendingRides.length>0?`<div class="card" style="border-left:3px solid #f59e0b">
+    <div class="card-title" style="color:#f59e0b">⏳ Pending Rides — Action Required (${pendingRides.length})</div>
+    ${pendingRides.map(r=>`
+    <div class="ride-card" onclick="openSel('${r._id}')">
+      <div class="ride-card-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${av(r.passenger,32,"#2d1f0d","#f59e0b","#fcd34d")}
+          <div><div style="font-size:13px;font-weight:600">${esc(r.passenger)}</div><div style="font-size:11px;color:#64748b">${r.time||""} · ${esc(r.driverName||"—")}</div></div>
+        </div>
+        ${rideBadge(r.status)}
+      </div>
+      <div class="ride-card-route">📍 ${esc(r.pickup||"—")} <span style="color:#0ea5e9">→</span> ${esc(r.dropoff||"—")}</div>
+      <div class="status-actions" onclick="event.stopPropagation()">
+        <button class="btn-start" onclick="startRide('${r._id}')">🚗 Start Ride</button>
+        <button class="btn-cancel" style="border:1px solid rgba(239,68,68,.4)!important;background:rgba(239,68,68,.1);color:#ef4444;border-radius:8px;cursor:pointer;padding:10px;font-size:12px" onclick="cancelRide('${r._id}')">❌ Cancel</button>
+      </div>
+    </div>`).join("")}
+  </div>`:""}
 
   <!-- ACTIVE RIDES -->
   <div class="card">
     <div class="card-title">🚗 Active Rides (${activeRides.length})</div>
     ${activeRides.length===0?`<div class="empty">No active rides right now.</div>`:""}
     ${activeRides.map(r=>`
-    <div class="ride-item" onclick="openSel('${r._id}')">
-      ${av(r.passenger,36,"#0d1f36","#0ea5e9","#7dd3fc")}
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600">${esc(r.passenger)}</div>
-        <div style="font-size:11px;color:#64748b;margin-top:2px">📍 ${esc(r.pickup)} → ${esc(r.dropoff)}</div>
-        <div style="font-size:11px;color:#0ea5e9;margin-top:2px">🚙 ${esc(r.driverName||"—")} · ${esc(r.plate||"—")}</div>
-      </div>
-      <div style="text-align:right;flex-shrink:0">
+    <div class="ride-card" onclick="openSel('${r._id}')">
+      <div class="ride-card-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${av(r.passenger,32,"#0d2d1a","#22c55e","#86efac")}
+          <div><div style="font-size:13px;font-weight:600">${esc(r.passenger)}</div><div style="font-size:11px;color:#64748b">🚙 ${esc(r.driverName||"—")} · ${esc(r.plate||"—")}</div></div>
+        </div>
         ${rideBadge(r.status)}
-        <div style="font-size:10px;color:#64748b;margin-top:4px">${r.time||""}</div>
+      </div>
+      <div class="ride-card-route">📍 ${esc(r.pickup||"—")} <span style="color:#22c55e">→</span> ${esc(r.dropoff||"—")}</div>
+      <div class="status-actions" onclick="event.stopPropagation()">
+        <button class="btn-complete" onclick="completeRide('${r._id}')">✅ Complete</button>
+        <button style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.4);border-radius:8px;cursor:pointer;padding:10px;font-size:12px" onclick="cancelRide('${r._id}')">❌ Cancel</button>
       </div>
     </div>`).join("")}
   </div>
@@ -740,7 +796,7 @@ function renderDashboard(){
   <!-- DRIVER STATUS -->
   <div class="card">
     <div class="card-title">👨‍✈️ Driver Status (${S.drivers.length})</div>
-    ${S.drivers.length===0?`<div class="empty">No drivers yet. Go to Drivers tab to add.</div>`:""}
+    ${S.drivers.length===0?`<div class="empty">No drivers yet.</div>`:""}
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
       ${S.drivers.map(d=>`
       <div style="background:#111827;border:1px solid #2a4a6b;border-radius:9px;padding:10px 12px">
@@ -774,7 +830,7 @@ function renderDashboard(){
   </div>`;}
 
 // ═══════════════════════════════════════════
-//  RENDER: NEW RIDE
+//  RENDER: NEW RIDE — with fare estimate
 // ═══════════════════════════════════════════
 function renderNewRide(){
   if(!isMgr())return`<div class="empty">Manager access required.</div>`;
@@ -787,19 +843,34 @@ function renderNewRide(){
       <div class="fcol"><label>Phone (WhatsApp) 📱</label><input id="r-phone" placeholder="0801-234-5678"/></div>
     </div>
     <div class="frow">
-      <div class="fcol"><label>Pickup location *</label><input id="r-pickup" placeholder="e.g. Lekki Phase 1 Gate"/></div>
-      <div class="fcol"><label>Dropoff location *</label><input id="r-dropoff" placeholder="e.g. Murtala Airport"/></div>
+      <div class="fcol"><label>Pickup location *</label><input id="r-pickup" placeholder="e.g. ApartBook Lodge, GRA" oninput="updateFareEstimate()"/></div>
+      <div class="fcol"><label>Dropoff location *</label><input id="r-dropoff" placeholder="e.g. Benin Airport" oninput="updateFareEstimate()"/></div>
     </div>
     <div class="frow">
       <div class="fcol"><label>Date *</label><input id="r-date" type="date" value="${tod()}"/></div>
       <div class="fcol"><label>Time *</label><input id="r-time" type="time" value="${nowTime()}"/></div>
     </div>
-    <label>Assign driver *</label>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:12px">
-      ${availDrivers.length===0?`<div style="color:#64748b;font-size:13px;grid-column:1/-1">No available drivers. All are on ride or offline.</div>`:""}
+
+    <!-- AIRPORT TOGGLE -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;background:#111827;border:1px solid #2a4a6b;border-radius:8px;padding:10px 14px;cursor:pointer" onclick="document.getElementById('r-airport').click()">
+      <input id="r-airport" type="checkbox" style="width:18px;height:18px;margin-bottom:0;flex-shrink:0;cursor:pointer" onchange="updateFareEstimate()"/>
+      <div><div style="font-size:13px;font-weight:500">Airport ride ✈️</div><div style="font-size:11px;color:#64748b">Adds ${fmt(S.pricing.airportFee)} airport surcharge</div></div>
+    </div>
+
+    <!-- FARE ESTIMATE BOX -->
+    <div class="fare-estimate" id="fare-est-box">
+      <div style="font-size:10px;color:#64748b;margin-bottom:4px">FARE ESTIMATE</div>
+      <div style="font-size:13px;color:#64748b">Enter pickup & dropoff to see estimate</div>
+    </div>
+
+    <!-- DRIVER SELECTION -->
+    <label>Select driver *</label>
+    ${availDrivers.length===0?`<div style="color:#64748b;font-size:13px;padding:10px;background:#111827;border-radius:8px;margin-bottom:12px">No available drivers. All are on ride or offline.</div>`:""}
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:12px">
       ${availDrivers.map(d=>`
-      <div onclick="document.getElementById('r-driver').value='${d._id}';document.querySelectorAll('.dcard').forEach(x=>x.style.borderColor='#2a4a6b');this.style.borderColor='#0ea5e9'"
-        class="dcard" style="border:2px solid #2a4a6b;border-radius:9px;padding:10px 12px;cursor:pointer;background:#111827;transition:.2s">
+      <div class="dcard${S.selectedDriverId===d._id?" dcard-sel":""}" 
+        style="border:2px solid #2a4a6b;border-radius:9px;padding:10px 12px;cursor:pointer;background:#111827;transition:.2s"
+        onclick="selectDriver('${d._id}',this)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
           <span style="font-weight:500;font-size:12px;color:#e2e8f0">${esc(d.name)}</span>
           ${driverBadge(d.status||"Offline")}
@@ -809,51 +880,30 @@ function renderNewRide(){
       </div>`).join("")}
     </div>
     <select id="r-driver" style="display:none">
-      <option value="">— Select driver —</option>
+      <option value="">— Select —</option>
       ${availDrivers.map(d=>`<option value="${d._id}">${esc(d.name)}</option>`).join("")}
     </select>
-
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;background:#111827;border:1px solid #2a4a6b;border-radius:8px;padding:10px 14px">
-      <input id="r-airport" type="checkbox" style="width:18px;height:18px;margin-bottom:0;flex-shrink:0"/>
-      <div>
-        <div style="font-size:13px;font-weight:500">Airport ride ✈️</div>
-        <div style="font-size:11px;color:#64748b">Adds ${fmt(S.pricing.airportFee)} airport surcharge</div>
-      </div>
-    </div>
 
     <label>Special notes</label>
     <textarea id="r-notes" placeholder="Any special instructions for driver…"></textarea>
 
-    <div class="info-box">
-      <div style="font-size:11px;color:#64748b;margin-bottom:6px">📊 Current Pricing</div>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px">
-        <span>Base: <strong style="color:#7dd3fc">${fmt(S.pricing.baseFare)}</strong></span>
-        <span>Per km: <strong style="color:#7dd3fc">${fmt(S.pricing.perKm)}</strong></span>
-        <span>Per min: <strong style="color:#7dd3fc">${fmt(S.pricing.perMinWaiting)}</strong></span>
-        <span>Min fare: <strong style="color:#7dd3fc">${fmt(S.pricing.minFare)}</strong></span>
-        ${isNightTime()?`<span style="color:#f59e0b">🌙 Night surcharge: ${S.pricing.nightSurcharge}x active</span>`:""}
-      </div>
-    </div>
-
     <div id="r-err" class="err"></div>
     <div id="r-ok" class="ok"></div>
     <button class="btnp" onclick="addRide()" style="width:100%;padding:13px;font-size:14px">🚗 Book Ride</button>
-    <div style="font-size:11px;color:#64748b;margin-top:8px;text-align:center">💬 You'll be prompted to send a WhatsApp confirmation after booking.</div>
+    <div style="font-size:11px;color:#64748b;margin-top:8px;text-align:center">💬 WhatsApp confirmation sent to passenger after booking</div>
   </div>`;}
 
 // ═══════════════════════════════════════════
-//  RENDER: LIVE MAP
+//  RENDER: LIVE MAP — FIXED
 // ═══════════════════════════════════════════
 function renderLiveMap(){
   const activeRides=S.rides.filter(r=>r.status==="Active");
   return`
   <div class="pg-title">🗺️ Live Fleet Map</div>
   <div class="card">
-    <div class="map-controls">
-      <div style="flex:1;font-size:13px;color:#64748b">
-        Showing live driver locations on map. Updates every 5 seconds automatically.
-      </div>
-      <button class="btnp" style="font-size:12px;padding:7px 14px" onclick="if(leafletMap)leafletMap.setView([6.5244,3.3792],12)">Reset View</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:12px;color:#64748b">Live driver locations · updates every 5 seconds</div>
+      <button class="btnp" style="font-size:12px;padding:7px 14px" onclick="if(leafletMap)leafletMap.setView([6.3350,5.6270],13)">📍 Benin City</button>
     </div>
     <div id="live-map"></div>
     <div class="map-legend">
@@ -863,37 +913,35 @@ function renderLiveMap(){
     </div>
   </div>
 
-  <!-- ACTIVE RIDES ON MAP -->
   <div class="card">
     <div class="card-title">🚗 Active Rides (${activeRides.length})</div>
     ${activeRides.length===0?`<div class="empty">No active rides. Map will show drivers once rides are started.</div>`:""}
     ${activeRides.map(r=>`
-    <div class="ride-item">
-      ${av(r.passenger,36,"#0d1f36","#0ea5e9","#7dd3fc")}
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:600">${esc(r.passenger)}</div>
-        <div style="font-size:11px;color:#64748b">📍 ${esc(r.pickup)} → ${esc(r.dropoff)}</div>
-        <div style="font-size:11px;color:#0ea5e9;margin-top:2px">🚙 ${esc(r.driverName||"—")} · ${esc(r.plate||"—")}</div>
+    <div class="ride-card">
+      <div class="ride-card-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${av(r.passenger,32,"#0d2d1a","#22c55e","#86efac")}
+          <div><div style="font-size:13px;font-weight:600">${esc(r.passenger)}</div><div style="font-size:11px;color:#0ea5e9">🚙 ${esc(r.driverName||"—")} · ${esc(r.plate||"—")}</div></div>
+        </div>
+        ${rideBadge(r.status)}
       </div>
-      <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">
-        <button class="btn-green" style="font-size:10px;padding:5px 10px" onclick="completeRide('${r._id}')">✅ Complete</button>
-        <button class="btn-red" style="font-size:10px;padding:5px 10px" onclick="cancelRide('${r._id}')">❌ Cancel</button>
+      <div class="ride-card-route">📍 ${esc(r.pickup||"—")} <span style="color:#22c55e">→</span> ${esc(r.dropoff||"—")}</div>
+      <div class="status-actions">
+        <button class="btn-complete" onclick="completeRide('${r._id}')">✅ Complete</button>
+        <button style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.4);border-radius:8px;cursor:pointer;padding:10px;font-size:12px" onclick="cancelRide('${r._id}')">❌ Cancel</button>
       </div>
     </div>`).join("")}
   </div>
 
-  <!-- DRIVER TRACKING PANEL (for drivers) -->
   <div class="card" style="border-color:rgba(14,165,233,.4)">
     <div class="card-title">📍 Driver GPS Panel</div>
-    <div style="font-size:13px;color:#64748b;margin-bottom:12px;line-height:1.6">
-      If you are a driver, tap the button below to start sharing your live location. Your location will appear on the map above for the dispatcher to see.
-    </div>
+    <div style="font-size:13px;color:#64748b;margin-bottom:12px;line-height:1.6">Tap below to share your live GPS location with the dispatcher.</div>
     ${S.isTracking?`
     <div style="background:#0d2d1a;border:1px solid rgba(34,197,94,.4);border-radius:8px;padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
       <div class="pulse" style="width:12px;height:12px;background:#22c55e;border-radius:50%"></div>
-      <span style="color:#22c55e;font-weight:500">GPS tracking is ACTIVE — your location is being shared</span>
+      <span style="color:#22c55e;font-weight:500">GPS tracking is ACTIVE</span>
     </div>
-    <button class="btn-red" style="width:100%;padding:11px" onclick="stopTracking();render()">⏹ Stop Sharing Location</button>`:`
+    <button class="btn-red" style="width:100%;padding:11px" onclick="stopTracking();render()">⏹ Stop Sharing</button>`:`
     <button class="btn-green" style="width:100%;padding:11px;font-size:14px" onclick="startTracking('manual-'+Date.now());render()">📍 Start Sharing My Location</button>`}
   </div>`;}
 
@@ -904,8 +952,6 @@ function renderDrivers(){
   if(!isMgr())return`<div class="empty">Manager access required.</div>`;
   return`
   <div class="pg-title">Driver Management (${S.drivers.length})</div>
-
-  <!-- ADD DRIVER FORM -->
   <div class="card">
     <div class="card-title">➕ Add New Driver</div>
     <div class="frow">
@@ -924,7 +970,7 @@ function renderDrivers(){
           <option>Mercedes C-Class</option><option>Other</option>
         </select>
       </div>
-      <div class="fcol"><label>Plate number *</label><input id="d-plate" placeholder="e.g. LAG-123-AA" style="text-transform:uppercase"/></div>
+      <div class="fcol"><label>Plate number *</label><input id="d-plate" placeholder="e.g. BEN-123-AA" style="text-transform:uppercase"/></div>
     </div>
     <div class="frow">
       <div class="fcol"><label>Car color</label><input id="d-color" placeholder="e.g. Black, Silver"/></div>
@@ -935,31 +981,30 @@ function renderDrivers(){
     <button class="btnp" onclick="addDriver()">Add Driver</button>
   </div>
 
-  <!-- DRIVERS LIST -->
-  <div class="tblw">
-    <table>
-      <thead><tr><th>Driver</th><th>Vehicle</th><th>Plate</th><th>Status</th><th>Rides</th><th>Earnings</th><th></th></tr></thead>
-      <tbody>
-        ${S.drivers.length===0?`<tr><td colspan="7" class="empty">No drivers yet.</td></tr>`:""}
-        ${S.drivers.map(d=>`
-        <tr onclick="openSel('${d._id}')">
-          <td><div style="display:flex;align-items:center;gap:8px">
-            ${av(d.name,28,"#0d1f36","#0ea5e9","#7dd3fc")}
-            <div><div style="font-weight:500">${esc(d.name)}</div><div style="font-size:10px;color:#64748b">${esc(d.phone||"—")}</div></div>
-          </div></td>
-          <td style="font-size:12px">${esc(d.vehicle||"—")}</td>
-          <td style="font-size:12px;color:#0ea5e9;font-weight:500">${esc(d.plate||"—")}</td>
-          <td>${driverBadge(d.status||"Offline")}</td>
-          <td style="color:#7dd3fc;font-weight:500">${d.totalRides||0}</td>
-          <td style="color:#22c55e;font-size:12px;font-weight:500">${fmt(d.totalEarnings||0)}</td>
-          <td><button class="btn" style="font-size:10px;padding:4px 10px" onclick="event.stopPropagation();openSel('${d._id}')">View</button></td>
-        </tr>`).join("")}
-      </tbody>
-    </table>
+  <!-- DRIVER CARDS — Better mobile layout -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">
+    ${S.drivers.length===0?`<div class="empty" style="grid-column:1/-1">No drivers yet.</div>`:""}
+    ${S.drivers.map(d=>`
+    <div style="background:#0c1220;border:1px solid #1e3a5f;border-radius:12px;padding:14px;cursor:pointer" onclick="openSel('${d._id}')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        ${av(d.name,40,"#0d1f36","#0ea5e9","#7dd3fc")}
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:14px">${esc(d.name)}</div>
+          <div style="font-size:11px;color:#64748b">${esc(d.phone||"—")}</div>
+        </div>
+        ${driverBadge(d.status||"Offline")}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+        <div style="background:#111827;border-radius:6px;padding:6px 8px"><div style="color:#64748b;margin-bottom:2px">Vehicle</div><div style="color:#e2e8f0">${esc(d.vehicle||"—")}</div></div>
+        <div style="background:#111827;border-radius:6px;padding:6px 8px"><div style="color:#64748b;margin-bottom:2px">Plate</div><div style="color:#0ea5e9;font-weight:500">${esc(d.plate||"—")}</div></div>
+        <div style="background:#111827;border-radius:6px;padding:6px 8px"><div style="color:#64748b;margin-bottom:2px">Total Rides</div><div style="color:#7dd3fc;font-weight:600">${d.totalRides||0}</div></div>
+        <div style="background:#111827;border-radius:6px;padding:6px 8px"><div style="color:#64748b;margin-bottom:2px">Earnings</div><div style="color:#22c55e;font-weight:600">${fmt(d.totalEarnings||0)}</div></div>
+      </div>
+    </div>`).join("")}
   </div>`;}
 
 // ═══════════════════════════════════════════
-//  RENDER: ALL RIDES
+//  RENDER: RIDES — Fixed mobile table
 // ═══════════════════════════════════════════
 function renderRides(){
   const filtered=S.rides.filter(r=>{
@@ -978,7 +1023,30 @@ function renderRides(){
       ${RIDE_STATUSES.map(s=>`<option value="${s}" ${S.filterStatus===s?"selected":""}>${s}</option>`).join("")}
     </select>
   </div>
-  <div class="tblw">
+
+  <!-- Mobile cards view -->
+  <div style="display:none" id="rides-mobile">
+    ${filtered.map(r=>`
+    <div class="ride-card" onclick="openSel('${r._id}')">
+      <div class="ride-card-top">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${av(r.passenger,30,"#0d1f36","#0ea5e9","#7dd3fc")}
+          <div><div style="font-size:13px;font-weight:500">${esc(r.passenger)}</div><div style="font-size:10px;color:#64748b">${r.date||""} · ${r.time||""}</div></div>
+        </div>
+        ${rideBadge(r.status)}
+      </div>
+      <div class="ride-card-route">📍 ${esc(r.pickup||"—")} → ${esc(r.dropoff||"—")}</div>
+      <div class="ride-card-meta">
+        <span>🚙 ${esc(r.driverName||"—")}</span>
+        <span>${(r.distanceKm||0).toFixed(1)} km</span>
+        ${r.fare?`<span style="color:#22c55e;font-weight:500">${fmt(r.fare)}</span>`:""}
+      </div>
+    </div>`).join("")}
+    ${filtered.length===0?`<div class="empty">No rides found.</div>`:""}
+  </div>
+
+  <!-- Desktop table -->
+  <div class="tblw" id="rides-desktop">
     <table>
       <thead><tr><th>Passenger</th><th>Driver</th><th>Pickup</th><th>Dropoff</th><th>Date</th><th>Km</th><th>Fare</th><th>Status</th><th></th></tr></thead>
       <tbody>
@@ -993,17 +1061,25 @@ function renderRides(){
           <td style="font-size:11px;color:#64748b;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.pickup||"—")}</td>
           <td style="font-size:11px;color:#64748b;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.dropoff||"—")}</td>
           <td style="font-size:11px;color:#64748b;white-space:nowrap">${r.date||""}</td>
-          <td style="font-size:11px">${(r.distanceKm||0).toFixed(1)}</td>
+          <td style="font-size:11px;color:#7dd3fc">${(r.distanceKm||0).toFixed(1)} km</td>
           <td style="font-size:12px;color:#22c55e;font-weight:500">${r.fare?fmt(r.fare):"—"}</td>
           <td>${rideBadge(r.status)}</td>
           <td><button class="btn" style="font-size:10px;padding:4px 9px" onclick="event.stopPropagation();openSel('${r._id}')">View</button></td>
         </tr>`).join("")}
       </tbody>
     </table>
-  </div>`;}
+  </div>
+  <script>
+  (function(){
+    const isMobile=window.innerWidth<600;
+    const mob=document.getElementById("rides-mobile");
+    const desk=document.getElementById("rides-desktop");
+    if(mob&&desk){mob.style.display=isMobile?"block":"none";desk.style.display=isMobile?"none":"block";}
+  })();
+  <\/script>`;}
 
 // ═══════════════════════════════════════════
-//  RENDER: REPORTS
+//  RENDER: REPORTS — with charts
 // ═══════════════════════════════════════════
 function renderReports(){
   if(!isMgr())return`<div class="empty">Manager access required.</div>`;
@@ -1012,19 +1088,25 @@ function renderReports(){
   const totalRev=S.rides.filter(r=>r.status==="Completed").reduce((s,r)=>s+(r.fare||0),0);
   const topDriver=S.drivers.sort((a,b)=>(b.totalEarnings||0)-(a.totalEarnings||0))[0];
   const maxEarnings=Math.max(...S.drivers.map(d=>d.totalEarnings||0),1);
+  const completionRate=S.rides.length?Math.round(S.rides.filter(r=>r.status==="Completed").length/S.rides.length*100):0;
+
+  // Status breakdown for chart
+  const statusCounts={Completed:S.rides.filter(r=>r.status==="Completed").length,Pending:S.rides.filter(r=>r.status==="Pending").length,Active:S.rides.filter(r=>r.status==="Active").length,Cancelled:S.rides.filter(r=>r.status==="Cancelled").length};
+  const maxCount=Math.max(...Object.values(statusCounts),1);
+  const statusColors={Completed:"#0ea5e9",Pending:"#f59e0b",Active:"#22c55e",Cancelled:"#ef4444"};
+
   return`
   <div class="pg-title">Reports &amp; Analytics</div>
 
-  <!-- SUMMARY -->
   <div class="card" style="border-left:3px solid #0ea5e9">
     <div class="card-title">📊 Data Summary</div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">
-      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Total rides stored</div><div style="font-size:20px;font-weight:700;color:#0ea5e9">${S.rides.length}</div></div>
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Total rides</div><div style="font-size:20px;font-weight:700;color:#0ea5e9">${S.rides.length}</div></div>
       <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Total drivers</div><div style="font-size:20px;font-weight:700;color:#22c55e">${S.drivers.length}</div></div>
       <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">All-time revenue</div><div style="font-size:15px;font-weight:700;color:#22c55e">${fmt(totalRev)}</div></div>
       <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Total km driven</div><div style="font-size:15px;font-weight:700;color:#0ea5e9">${S.rides.reduce((s,r)=>s+(r.distanceKm||0),0).toFixed(0)} km</div></div>
       <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Top driver</div><div style="font-size:13px;font-weight:700;color:#f59e0b">${topDriver?esc(topDriver.name):"—"}</div></div>
-      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Completion rate</div><div style="font-size:15px;font-weight:700;color:#22c55e">${S.rides.length?Math.round(S.rides.filter(r=>r.status==="Completed").length/S.rides.length*100):0}%</div></div>
+      <div style="background:#111827;border:1px solid #2a4a6b;border-radius:10px;padding:11px 13px"><div style="font-size:10px;color:#64748b;margin-bottom:3px">Completion rate</div><div style="font-size:15px;font-weight:700;color:#22c55e">${completionRate}%</div></div>
     </div>
     <button onclick="exportCSV()" style="width:100%;padding:14px;background:linear-gradient(135deg,#0d2d1a,#0a2010);border:1.5px solid rgba(34,197,94,.5);border-radius:11px;color:#22c55e;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px">
       <span style="font-size:20px">📊</span><span>Download All Rides as Excel / CSV</span>
@@ -1032,7 +1114,22 @@ function renderReports(){
     <div style="font-size:11px;color:#64748b;text-align:center">Includes all ${S.rides.length} rides · passenger · driver · distance · fare · payment</div>
   </div>
 
-  <!-- PDF -->
+  <!-- RIDE STATUS CHART -->
+  <div class="card">
+    <div class="card-title">📈 Ride Status Breakdown</div>
+    ${Object.entries(statusCounts).map(([status,count])=>`
+    <div class="chart-bar-wrap">
+      <div class="chart-bar-label">
+        <span style="color:${statusColors[status]}">${status}</span>
+        <span style="color:#64748b">${count} rides</span>
+      </div>
+      <div class="chart-bar-bg">
+        <div class="chart-bar-fill" style="width:${(count/maxCount*100).toFixed(1)}%;background:${statusColors[status]}33;border:1px solid ${statusColors[status]}66"></div>
+      </div>
+    </div>`).join("")}
+  </div>
+
+  <!-- PDF REPORT -->
   <div class="card">
     <div class="card-title">📄 Monthly PDF Report</div>
     <div class="frow">
@@ -1040,7 +1137,7 @@ function renderReports(){
       <div class="fcol"><label>Year</label><select onchange="setReportYear(this.value)">${[2024,2025,2026,2027].map(y=>`<option value="${y}" ${y===S.reportYear?"selected":""}>${y}</option>`).join("")}</select></div>
     </div>
     <div style="background:#111827;border-radius:9px;padding:13px 15px;margin-bottom:14px">
-      <div style="font-size:10px;color:#64748b;margin-bottom:9px;font-weight:500;text-transform:uppercase;letter-spacing:.04em">Preview: ${MN[S.reportMonth]} ${S.reportYear}</div>
+      <div style="font-size:10px;color:#64748b;margin-bottom:9px;font-weight:500;text-transform:uppercase">Preview: ${MN[S.reportMonth]} ${S.reportYear}</div>
       <div style="display:flex;gap:20px;flex-wrap:wrap">
         <div><div style="font-size:10px;color:#64748b">Rides</div><div style="font-size:17px;font-weight:700;color:#0ea5e9">${mb.length}</div></div>
         <div><div style="font-size:10px;color:#64748b">Completed</div><div style="font-size:17px;font-weight:700;color:#22c55e">${mb.filter(r=>r.status==="Completed").length}</div></div>
@@ -1048,18 +1145,22 @@ function renderReports(){
         <div><div style="font-size:10px;color:#64748b">Revenue</div><div style="font-size:15px;font-weight:700;color:#22c55e">${fmt(rev)}</div></div>
       </div>
     </div>
-    <button class="btnp" onclick="generatePDF()" style="width:100%;padding:13px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px"><span>📥</span><span>Download PDF Report</span></button>
+    <button class="btnp" onclick="generatePDF()" style="width:100%;padding:13px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px">📥 Download PDF Report</button>
   </div>
 
-  <!-- DRIVER EARNINGS -->
+  <!-- DRIVER EARNINGS CHART -->
   <div class="card">
     <div class="card-title">👨‍✈️ Driver Earnings</div>
     ${S.drivers.length===0?`<div class="empty">No drivers yet.</div>`:""}
     ${S.drivers.map(d=>`
     <div style="margin-bottom:14px">
-      <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:12px">
-        <span style="color:#7dd3fc;font-weight:500">${esc(d.name)} <span style="color:#64748b;font-weight:400">· ${d.totalRides||0} rides</span></span>
-        <span style="color:#22c55e;font-weight:500">${fmt(d.totalEarnings||0)}</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:12px;flex-wrap:wrap;gap:4px">
+        <div style="display:flex;align-items:center;gap:7px">
+          ${av(d.name,24,"#0d1f36","#0ea5e9","#7dd3fc")}
+          <span style="color:#7dd3fc;font-weight:500">${esc(d.name)}</span>
+          <span style="color:#64748b">${d.totalRides||0} rides</span>
+        </div>
+        <span style="color:#22c55e;font-weight:600">${fmt(d.totalEarnings||0)}</span>
       </div>
       <div class="bar-bg"><div class="bar-fill" style="width:${((d.totalEarnings||0)/maxEarnings*100).toFixed(1)}%;background:linear-gradient(90deg,#0ea5e9,#0ea5e988)"></div></div>
     </div>`).join("")}
@@ -1076,36 +1177,36 @@ function renderSettings(){
   <div class="card">
     <div class="settings-section">
       <h4>💰 Fare Pricing Configuration</h4>
-      <div style="background:#0d1f36;border:1px solid rgba(14,165,233,.3);border-radius:8px;padding:11px 13px;font-size:12px;color:#64748b;line-height:1.7;margin-bottom:14px">
-        Fare formula: <strong style="color:#7dd3fc">Base fare + (km × rate) + (wait mins × rate) + booking fee</strong><br>
-        Night surcharge applies 10:00 PM – 5:00 AM · Airport fee added when ride is marked as airport pickup/dropoff.
+      <div class="info-box" style="line-height:1.7;font-size:12px;color:#64748b">
+        Formula: <strong style="color:#7dd3fc">Base fare + (km × rate) + (wait mins × rate) + booking fee</strong><br>
+        Night surcharge: 10PM – 5AM · Airport fee: added when airport ride is checked
       </div>
       <div class="frow">
-        <div class="fcol"><label>Base fare (₦) per ride</label><input id="s-base" type="number" value="${p.baseFare}"/></div>
-        <div class="fcol"><label>Rate per kilometre (₦)</label><input id="s-perkm" type="number" value="${p.perKm}"/></div>
+        <div class="fcol"><label>Base fare (₦)</label><input id="s-base" type="number" value="${p.baseFare}"/></div>
+        <div class="fcol"><label>Rate per km (₦)</label><input id="s-perkm" type="number" value="${p.perKm}"/></div>
       </div>
       <div class="frow">
-        <div class="fcol"><label>Rate per waiting minute (₦)</label><input id="s-permin" type="number" value="${p.perMinWaiting}"/></div>
+        <div class="fcol"><label>Rate per wait min (₦)</label><input id="s-permin" type="number" value="${p.perMinWaiting}"/></div>
         <div class="fcol"><label>Minimum fare (₦)</label><input id="s-min" type="number" value="${p.minFare}"/></div>
       </div>
       <div class="frow">
-        <div class="fcol"><label>Night surcharge multiplier (e.g. 1.5 = 50% extra)</label><input id="s-night" type="number" step="0.1" value="${p.nightSurcharge}"/></div>
-        <div class="fcol"><label>Airport surcharge (₦) flat fee</label><input id="s-airport" type="number" value="${p.airportFee}"/></div>
+        <div class="fcol"><label>Night multiplier (e.g. 1.5)</label><input id="s-night" type="number" step="0.1" value="${p.nightSurcharge}"/></div>
+        <div class="fcol"><label>Airport surcharge (₦)</label><input id="s-airport" type="number" value="${p.airportFee}"/></div>
       </div>
-      <div class="fcol"><label>Booking/platform fee (₦)</label><input id="s-booking" type="number" value="${p.bookingFee}" style="max-width:200px"/></div>
+      <label>Booking/platform fee (₦)</label>
+      <input id="s-booking" type="number" value="${p.bookingFee}" style="max-width:200px"/>
     </div>
 
-    <!-- FARE CALCULATOR PREVIEW -->
     <div class="settings-section">
-      <h4>🧮 Sample Fare Calculator</h4>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
-        ${[{l:"Short trip (3km)",km:3,w:2,a:false},{l:"Medium trip (10km)",km:10,w:5,a:false},{l:"Long trip (25km)",km:25,w:10,a:false},{l:"Airport trip (20km)",km:20,w:5,a:true}].map(ex=>{
-          const fare=Math.round(calcFare(ex.km,ex.w,p,false,ex.a));
-          const night=Math.round(calcFare(ex.km,ex.w,p,true,ex.a));
+      <h4>🧮 Sample Fare Preview</h4>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">
+        ${[{l:"Short (3km)",km:3,w:2,a:false},{l:"Medium (10km)",km:10,w:5,a:false},{l:"Long (25km)",km:25,w:10,a:false},{l:"Airport (20km)",km:20,w:5,a:true}].map(ex=>{
+          const fare=calcFare(ex.km,ex.w,p,false,ex.a);
+          const night=calcFare(ex.km,ex.w,p,true,ex.a);
           return`<div style="background:#111827;border:1px solid #2a4a6b;border-radius:9px;padding:11px 12px">
             <div style="font-size:11px;color:#64748b;margin-bottom:4px">${ex.l}</div>
             <div style="font-size:16px;font-weight:700;color:#0ea5e9">${fmt(fare)}</div>
-            <div style="font-size:10px;color:#f59e0b">🌙 Night: ${fmt(night)}</div>
+            <div style="font-size:10px;color:#f59e0b">🌙 ${fmt(night)}</div>
           </div>`;
         }).join("")}
       </div>
@@ -1131,20 +1232,19 @@ function renderAudit(){
         ${S.auditLog.map(l=>`<tr>
           <td style="color:#7dd3fc;font-size:11px">${esc(l.email)}</td>
           <td><span class="badge" style="background:${l.action==="LOGIN"?"#0d1f36":"#2d0d0d"};color:${l.action==="LOGIN"?"#0ea5e9":"#ef4444"}">${l.action}</span></td>
-          <td style="color:#64748b;font-size:11px">${l.timestamp?.toDate?.()?.toLocaleString()||"—"}</td>
-          <td style="color:#475569;font-size:10px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc((l.device||"—").slice(0,60))}</td>
+          <td style="color:#64748b;font-size:11px;white-space:nowrap">${l.timestamp?.toDate?.()?.toLocaleString()||"—"}</td>
+          <td style="color:#475569;font-size:10px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc((l.device||"—").slice(0,50))}</td>
         </tr>`).join("")}
       </tbody>
     </table>
   </div>`;}
 
 // ═══════════════════════════════════════════
-//  RENDER: RIDE/DRIVER DETAIL MODAL
+//  RENDER: MODAL
 // ═══════════════════════════════════════════
 function renderModal(){
   if(!S.sel)return"";
   const s=S.sel;
-
   // DRIVER MODAL
   if(s.vehicle!==undefined&&s.plate!==undefined){
     return`<div class="modal-bg" onclick="closeSel()"><div class="modal-box" onclick="event.stopPropagation()">
@@ -1166,7 +1266,6 @@ function renderModal(){
       ${DR("License",esc(s.license||"—"))}
       ${DR("Total rides",`<span style="color:#7dd3fc;font-weight:500">${s.totalRides||0}</span>`)}
       ${DR("Total earnings",`<span style="color:#22c55e;font-weight:500">${fmt(s.totalEarnings||0)}</span>`)}
-      ${DR("Rating",`⭐ ${(s.rating||5).toFixed(1)}`)}
       <div style="margin-top:14px">
         <div style="font-size:12px;color:#64748b;margin-bottom:7px">Update status</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
@@ -1176,7 +1275,6 @@ function renderModal(){
       ${s.phone?`<button class="btn-green" style="width:100%;margin-top:12px;justify-content:center;display:flex;align-items:center;gap:7px;padding:10px" onclick="window.open('https://wa.me/${fmtWA(s.phone)}','_blank')">💬 WhatsApp ${esc(s.name.split(" ")[0])}</button>`:""}
     </div></div>`;
   }
-
   // RIDE MODAL
   const fare=s.fare?fmt(s.fare):s.estimatedFare?`~${fmt(s.estimatedFare)} (est.)`:"-";
   return`<div class="modal-bg" onclick="closeSel()"><div class="modal-box" onclick="event.stopPropagation()">
@@ -1195,23 +1293,23 @@ function renderModal(){
     ${DR("Driver",esc(s.driverName||"—"))}
     ${DR("Vehicle",`${esc(s.vehicle||"—")} · <span style="color:#0ea5e9">${esc(s.plate||"—")}</span>`)}
     ${DR("Distance",s.distanceKm?`${s.distanceKm.toFixed(1)} km`:"Not completed yet")}
-    ${DR("Fare",`<strong style="color:#22c55e">${fare}</strong>${s.isNight?` <span style="color:#f59e0b;font-size:10px">🌙 night rate</span>`:""}${s.isAirport?` <span style="color:#7dd3fc;font-size:10px">✈️ airport</span>`:""}`)}
+    ${DR("Fare",`<strong style="color:#22c55e">${fare}</strong>${s.isNight?` <span style="color:#f59e0b;font-size:10px">🌙</span>`:""}${s.isAirport?` <span style="color:#7dd3fc;font-size:10px">✈️</span>`:""}`)}
     ${DR("Status",rideBadge(s.status))}
     ${DR("Payment",`<span style="color:${s.paymentStatus==="Paid"?"#22c55e":"#f59e0b"}">${esc(s.paymentStatus||"Unpaid")}</span>`)}
     ${s.notes?DR("Notes",esc(s.notes)):""}
     ${DR("Created by",`<span style="color:#64748b;font-size:11px">${esc(s.createdBy||"—")}</span>`)}
 
     ${isMgr()&&s.status==="Pending"?`
-    <div style="margin-top:14px;display:flex;gap:8px">
-      <button class="btn-green" style="flex:1;justify-content:center;display:flex;align-items:center;gap:6px;padding:11px" onclick="startRide('${s._id}')">🚗 Start Ride</button>
-      <button class="btn-red" style="flex:1;justify-content:center;display:flex;align-items:center;gap:6px;padding:11px" onclick="cancelRide('${s._id}')">❌ Cancel</button>
+    <div class="status-actions">
+      <button class="btn-start" onclick="startRide('${s._id}')">🚗 Start Ride</button>
+      <button style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.4);border-radius:8px;cursor:pointer;padding:10px;font-size:12px;flex:1" onclick="cancelRide('${s._id}')">❌ Cancel</button>
     </div>`:""}
     ${isMgr()&&s.status==="Active"?`
-    <div style="margin-top:14px;display:flex;gap:8px">
-      <button class="btn-green" style="flex:1;justify-content:center;display:flex;align-items:center;gap:6px;padding:11px" onclick="completeRide('${s._id}')">✅ Complete Ride</button>
-      <button class="btn-red" style="padding:11px" onclick="cancelRide('${s._id}')">❌</button>
+    <div class="status-actions">
+      <button class="btn-complete" onclick="completeRide('${s._id}')">✅ Complete Ride</button>
+      <button style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.4);border-radius:8px;cursor:pointer;padding:10px;font-size:12px" onclick="cancelRide('${s._id}')">❌</button>
     </div>`:""}
-    ${s.phone?`<button style="width:100%;margin-top:10px;background:#0a2d1a;border:1.5px solid rgba(37,211,102,.5);border-radius:9px;padding:10px;color:#25d366;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" onclick="window.open('https://wa.me/${fmtWA(s.phone)}?text=${encodeURIComponent(`Your ride update: ${s.status}. Driver: ${s.driverName||"TBA"}. Plate: ${s.plate||"TBA"}`)}','_blank')">💬 Send WhatsApp Update</button>`:""}
+    ${s.phone?`<button style="width:100%;margin-top:10px;background:#0a2d1a;border:1.5px solid rgba(37,211,102,.5);border-radius:9px;padding:10px;color:#25d366;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" onclick="window.open('https://wa.me/${fmtWA(s.phone)}?text=${encodeURIComponent(`Ride update: ${s.status}. Driver: ${s.driverName||"TBA"}. Plate: ${s.plate||"TBA"}`)}','_blank')">💬 Send WhatsApp Update</button>`:""}
   </div></div>`;}
 
 // ═══════════════════════════════════════════
@@ -1250,19 +1348,10 @@ function render(){
 // ═══════════════════════════════════════════
 auth.onAuthStateChanged(user=>{
   S.user=user||null;
-  if(user){
-    loadProfile();
-    loadPricing();
-    loadDrivers();
-    loadRides();
-  }else{
-    S.profile=null;S.rides=[];S.drivers=[];
-    if(ridesUnsub){ridesUnsub();ridesUnsub=null;}
-    auditUnsub=null;
-  }
+  if(user){loadProfile();loadPricing();loadDrivers();loadRides();}
+  else{S.profile=null;S.rides=[];S.drivers=[];if(ridesUnsub){ridesUnsub();ridesUnsub=null;}}
   render();
 });
-
 render();
 </script>
 <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
